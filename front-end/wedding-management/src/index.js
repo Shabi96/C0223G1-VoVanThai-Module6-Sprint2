@@ -1,13 +1,34 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
+import Navbar from './components/Navbar';
+import Login from './components/Login';
+import ListDress from './components/ListLuxuryDress';
+import Footer from './components/Footer';
+import ListStandardDress from './components/ListStandardDress';
+import ListVipDress from './components/ListVipDress';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <div className='row'>
+        <div className='col-3'>
+          <Navbar />
+        </div>
+        <div className='col-9'>
+          <Routes>
+            <Route path='/login' element={<Login />}></Route>
+            <Route path='/listLuxury' element={<ListDress />}></Route>
+            <Route path='/listStandard' element={<ListStandardDress />}></Route>
+            <Route path='/listVip' element={<ListVipDress />}></Route>
+          </Routes>
+          <Footer />
+        </div>
+      </div>
+    </BrowserRouter>
   </React.StrictMode>
 );
 
