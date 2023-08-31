@@ -1,7 +1,7 @@
 import React from "react";
 import moment from 'moment';
 
-export default function ListLuxuryDress() {
+export default function ListVip() {
     return (
         <div className="container-fluid py-4">
             <div className="row">
@@ -9,7 +9,7 @@ export default function ListLuxuryDress() {
                     <div className="card my-4">
                         <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                             <div className="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                                <h6 className="text-white font-weight-bolder text-capitalize ps-3" style={{textAlign:  'center'}}>LUXURY</h6>
+                                <h6 className="text-white font-weight-bolder text-capitalize ps-3" style={{textAlign:  'center'}}>VIP</h6>
                             </div>
                         </div>
                         <div className="card-body pb-2">
@@ -32,7 +32,7 @@ export default function ListLuxuryDress() {
                                                     {/*                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">*/}
                                                     {/*                      </div>*/}
                                                     <div className="d-flex flex-column justify-content-center">
-                                                        <h6 className="mb-0 text-sm">LUX-001</h6>
+                                                        <h6 className="mb-0 text-sm">VIP-001</h6>
                                                         {/*                        <p class="text-xs text-secondary mb-0">john@creative-tim.com</p>*/}
                                                     </div>
                                                 </div>
@@ -59,7 +59,7 @@ export default function ListLuxuryDress() {
                                                     {/*                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">*/}
                                                     {/*                      </div>*/}
                                                     <div className="d-flex flex-column justify-content-center">
-                                                        <h6 className="mb-0 text-sm">LUX-001</h6>
+                                                        <h6 className="mb-0 text-sm">VIP-002</h6>
                                                         {/*                        <p class="text-xs text-secondary mb-0">john@creative-tim.com</p>*/}
                                                     </div>
                                                 </div>
@@ -86,7 +86,7 @@ export default function ListLuxuryDress() {
                                                     {/*                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">*/}
                                                     {/*                      </div>*/}
                                                     <div className="d-flex flex-column justify-content-center">
-                                                        <h6 className="mb-0 text-sm">LUX-001</h6>
+                                                        <h6 className="mb-0 text-sm">VIP-003</h6>
                                                         {/*                        <p class="text-xs text-secondary mb-0">john@creative-tim.com</p>*/}
                                                     </div>
                                                 </div>
@@ -113,7 +113,7 @@ export default function ListLuxuryDress() {
                                                     {/*                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">*/}
                                                     {/*                      </div>*/}
                                                     <div className="d-flex flex-column justify-content-center">
-                                                        <h6 className="mb-0 text-sm">LUX-001</h6>
+                                                        <h6 className="mb-0 text-sm">VIP-004</h6>
                                                         {/*                        <p class="text-xs text-secondary mb-0">john@creative-tim.com</p>*/}
                                                     </div>
                                                 </div>
@@ -140,7 +140,7 @@ export default function ListLuxuryDress() {
                                                     {/*                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">*/}
                                                     {/*                      </div>*/}
                                                     <div className="d-flex flex-column justify-content-center">
-                                                        <h6 className="mb-0 text-sm">LUX-001</h6>
+                                                        <h6 className="mb-0 text-sm">VIP-005</h6>
                                                         {/*                        <p class="text-xs text-secondary mb-0">john@creative-tim.com</p>*/}
                                                     </div>
                                                 </div>
@@ -167,7 +167,7 @@ export default function ListLuxuryDress() {
                                                     {/*                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">*/}
                                                     {/*                      </div>*/}
                                                     <div className="d-flex flex-column justify-content-center">
-                                                        <h6 className="mb-0 text-sm">LUX-001</h6>
+                                                        <h6 className="mb-0 text-sm">VIP-006</h6>
                                                         {/*                        <p class="text-xs text-secondary mb-0">john@creative-tim.com</p>*/}
                                                     </div>
                                                 </div>

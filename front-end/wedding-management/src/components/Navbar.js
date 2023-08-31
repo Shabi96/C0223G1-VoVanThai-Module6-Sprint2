@@ -1,89 +1,75 @@
 import React from "react";
-import '../../src/css/nucleo-icons.css';
-import '../../src/css/material-dashboard.min.css';
-import '../../src/css/nucleo-svg.css';
-import logo from '../../src/logo-ct.png';
+import '../css/style.css';
 import { Link } from "react-router-dom";
+import image from '../Wedding.png';
 
-export default function Navbar() {
+export default function NewNavBar() {
+    const getYear = new Date().getFullYear();
     return (
-        <aside className="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark" id="sidenav-main">
-            <div className="sidenav-header">
-                <i className="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav" />
-                <a className="navbar-brand m-0" href="#" target="_blank">
-                    <img src={logo} className="navbar-brand-img h-100" alt="main_logo" />
-                    <span className="ms-1 font-weight-bold text-white">Quản lý</span>
-                </a>
-            </div>
-            <hr className="horizontal light mt-0 mb-2" />
-            <div className="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
-                <ul className="navbar-nav">
-                    <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle text-white" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                                <i className="material-icons opacity-10">dashboard</i>
-                            </div>
-                            <span className="nav-link-text ms-1">Dịch vụ</span>
-                        </a>
-                        <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><Link className="dropdown-item" to={`/listStandard`}>STANDARD</Link></li>
-                            <li><Link className="dropdown-item" to={`/listVip`}>VIP</Link></li>
-                            <li><Link className="dropdown-item" to={`/listLuxury`}>LUXURY</Link></li>
-                        </ul>
-                        {/* <Link className="nav-link text-white " to={`/list`}>
-                            <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                                <i className="material-icons opacity-10">dashboard</i>
-                            </div>
-                            <span className="nav-link-text ms-1">Dịch vụ</span>
-                        </Link> */}
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link text-white " href="#">
-                            <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                                <i className="material-icons opacity-10">table_view</i>
-                            </div>
-                            <span className="nav-link-text ms-1">Hợp đồng</span>
-                        </a>
-                        
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link text-white " href="#">
-                            <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                                <i className="material-icons opacity-10">notifications</i>
-                            </div>
-                            <span className="nav-link-text ms-1">Thông báo</span>
-                        </a>
-                    </li>
-                    <li className="nav-item mt-3">
-                        <h6 className="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Tài khoản</h6>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link text-white " href="#">
-                            <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                                <i className="material-icons opacity-10">person</i>
-                            </div>
-                            <span className="nav-link-text ms-1">Cá nhân</span>
-                        </a>
-                    </li>
-                    <li className="nav-item">
-                        <Link className="nav-link text-white " to={`/login`}>
-                            <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                                <i className="material-icons opacity-10">login</i>
-                            </div>
-                            <span className="nav-link-text ms-1">Đăng nhập</span>
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link text-white " href="#">
-                            <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                                <i className="material-icons opacity-10">assignment</i>
-                            </div>
-                            <span className="nav-link-text ms-1">Đăng xuất</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </aside>
+        <div className="hidden__show">
+            <nav id="sidebar">
+                <div className="custom-menu">
+                    <button type="button" id="sidebarCollapse" className="btn btn-primary">
+                        <i className="fa fa-bars" />
+                        <span className="sr-only">Toggle Menu</span>
+                    </button>
+                </div>
+                <div className="p-4 pt-4">
+                    <div className="pb-2" style={{display: "flex", justifyContent: 'center'}}>
+                        <img src={image} style={{width: '170px', borderRadius: '50%'}} />
+                    </div>                    
+                    <ul className="list-unstyled components mb-5">
+                        <li className="active">
+                            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">
+                                <i className="fa-solid fa-list-check"></i>
+                                <span> Quản lý</span></a>
+                            <ul className="collapse list-unstyled" id="homeSubmenu">
+                                <li>
+                                    <Link to={`/standard`}>Standard</Link>
+                                </li>
+                                <li>
+                                    <Link to={`/vip`}>VIP</Link>
+                                </li>
+                                <li>
+                                    <Link to={`/luxury`}>LUXURY</Link>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">
+                                <i class="fa-solid fa-file-contract"></i>
+                                <span> Hợp đồng</span></a>
+                            <ul className="collapse list-unstyled" id="pageSubmenu">
+                                <li>
+                                    <Link to={`/create-contract`}>Thêm mới hợp đồng</Link>
+                                </li>
+                                <li>
+                                    <Link to={`/contract`}>Đang thuê</Link>
+                                </li>
+                                <li>
+                                    <Link href="#">Đã xong</Link>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa-solid fa-user"></i><span> Cá nhân</span></a>
+                        </li>
+                        <li>
+                            <Link to={`/login`}><i class="fa-solid fa-right-to-bracket"></i><span> Đăng nhập</span></Link>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa-solid fa-power-off"></i><span> Đăng xuất</span></a>
+                        </li>
+                    </ul>
 
+                    <div className="footer">
+                        <p>{/* Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. */}
+                            Copyright © {getYear} <br></br>
+                            All rights reserved | This template is made with <i className="icon-heart" aria-hidden="true" /> by <a href="https://colorlib.com" target="_blank">Colorlib.com</a>
+                            {/* Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. */}</p>
+                    </div>
+                </div>
+            </nav>
+        </div>
     )
 }

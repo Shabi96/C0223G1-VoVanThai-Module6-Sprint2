@@ -3,12 +3,14 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
-import Navbar from './components/Navbar';
-import Login from './components/Login';
-import ListDress from './components/ListLuxuryDress';
+import NewNavBar from './components/Navbar';
+import ListLuxuryDress from './components/ListLuxuryDress';
+import ListStandard from './components/ListStandard';
+import ListVip from './components/ListVip';
+import Contract from './components/Contract';
 import Footer from './components/Footer';
-import ListStandardDress from './components/ListStandardDress';
-import ListVipDress from './components/ListVipDress';
+import Login from './components/Login';
+import CreateContract from './components/CreateContract';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -16,14 +18,16 @@ root.render(
     <BrowserRouter>
       <div className='row'>
         <div className='col-3'>
-          <Navbar />
+          <NewNavBar />
         </div>
         <div className='col-9'>
           <Routes>
+            <Route path='/luxury' element={<ListLuxuryDress />}></Route>
+            <Route path='/standard' element={<ListStandard />}></Route>
+            <Route path='/vip' element={<ListVip />}></Route>
+            <Route path='/contract' element={<Contract />}></Route>
             <Route path='/login' element={<Login />}></Route>
-            <Route path='/listLuxury' element={<ListDress />}></Route>
-            <Route path='/listStandard' element={<ListStandardDress />}></Route>
-            <Route path='/listVip' element={<ListVipDress />}></Route>
+            <Route path='/create-contract' element={<CreateContract />}></Route>
           </Routes>
           <Footer />
         </div>
