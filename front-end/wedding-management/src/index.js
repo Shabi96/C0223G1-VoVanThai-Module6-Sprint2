@@ -11,6 +11,7 @@ import Contract from './components/Contract';
 import Footer from './components/Footer';
 import Login from './components/Login';
 import CreateContract from './components/CreateContract';
+import CreateCustomer from './components/CreateCustomer';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -28,6 +29,7 @@ root.render(
             <Route path='/contract' element={<Contract />}></Route>
             <Route path='/login' element={<Login />}></Route>
             <Route path='/create-contract' element={<CreateContract />}></Route>
+            <Route path='/create-customer' element={<CreateCustomer />}></Route>
           </Routes>
           <Footer />
         </div>

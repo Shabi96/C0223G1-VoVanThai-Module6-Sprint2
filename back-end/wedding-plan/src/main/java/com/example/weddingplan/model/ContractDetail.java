@@ -9,7 +9,13 @@ public class ContractDetail {
     private Long idContractDetail;
     private Double deposit;
     @OneToOne
+    @JoinColumn(name = "id_dress")
     private Dress dress;
+
+    @OneToOne
+    @JoinColumn(name = "id_vest")
+    private Vest vest;
+
     @OneToOne
     @JoinColumn(name = "id_contract")
     private Contract contract;
@@ -17,10 +23,11 @@ public class ContractDetail {
     public ContractDetail() {
     }
 
-    public ContractDetail(Long id, Double deposit, Dress dress, Contract contract) {
-        this.idContractDetail = id;
+    public ContractDetail(Long idContractDetail, Double deposit, Dress dress, Vest vest, Contract contract) {
+        this.idContractDetail = idContractDetail;
         this.deposit = deposit;
         this.dress = dress;
+        this.vest = vest;
         this.contract = contract;
     }
 
@@ -46,6 +53,14 @@ public class ContractDetail {
 
     public void setDress(Dress dress) {
         this.dress = dress;
+    }
+
+    public Vest getVest() {
+        return vest;
+    }
+
+    public void setVest(Vest vest) {
+        this.vest = vest;
     }
 
     public Contract getContract() {

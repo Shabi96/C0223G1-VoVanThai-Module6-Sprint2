@@ -11,7 +11,7 @@ export default function Footer() {
                             © {getYear}
                             ,
                             made with <i className="fa fa-heart" /> by
-                            &nbsp;<a href="https://www.creative-tim.com" className="font-weight-bold" target="_blank">Wedding</a>&nbsp;
+                            &nbsp;<a href="#" className="font-weight-bold">TK Wedding</a>&nbsp;
                             for a better web.
                         </div>
                     </div>

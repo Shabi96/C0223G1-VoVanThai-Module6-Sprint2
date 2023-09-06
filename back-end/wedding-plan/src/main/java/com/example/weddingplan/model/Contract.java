@@ -10,6 +10,9 @@ public class Contract {
     private String startDate;
     private String endDate;
     @OneToOne
+    @JoinColumn(name = "id_combo")
+    private Combo combo;
+    @OneToOne
     @JoinColumn(name = "id_customer")
     private Customer customer;
     @OneToOne
@@ -19,10 +22,11 @@ public class Contract {
     public Contract() {
     }
 
-    public Contract(Long idContract, String startDate, String endDate, Customer customer, Employee employee) {
+    public Contract(Long idContract, String startDate, String endDate, Combo combo, Customer customer, Employee employee) {
         this.idContract = idContract;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.combo = combo;
         this.customer = customer;
         this.employee = employee;
     }
@@ -49,6 +53,14 @@ public class Contract {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public Combo getCombo() {
+        return combo;
+    }
+
+    public void setCombo(Combo combo) {
+        this.combo = combo;
     }
 
     public Customer getCustomer() {
