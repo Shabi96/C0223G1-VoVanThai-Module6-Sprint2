@@ -16,7 +16,7 @@ export default function CreateCustomer() {
                 <span className="opacity-6" />
                 <div className="container my-auto">
                     <div className="row">
-                        <div className="col-lg-4 col-md-8 col-12 mx-auto">
+                        <div className="col-lg-6 col-md-8 col-12 mx-auto">
                             <div className="card z-index-0 fadeIn3 fadeInBottom">
                                 <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                                     <div className="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
@@ -53,20 +53,20 @@ export default function CreateCustomer() {
                                             <div className=" input-group input-group-outline my-3">
                                                 <Field className="form-control"
                                                     type='text' placeholder='Họ và tên' name='nameCustomer' />
+                                                <ErrorMessage name="nameCustomer" component="div" className="error" />
                                             </div>
-                                            <ErrorMessage name="nameCustomer" component="div" className="error" />
                                             <div className="input-group input-group-outline mb-3">
                                                 <Field type="text" name='phone' placeholder="Số điện thoại" className="form-control" />
+                                                <ErrorMessage name="phone" component="div" className="error" />
                                             </div>
-                                            <ErrorMessage name="phone" component="div" className="error" />
                                             <div className="input-group input-group-outline my-3">
                                                 <Field type="email" placeholder="Email" name='email' className="form-control" />
+                                                <ErrorMessage name="email" component="div" className="error" />
                                             </div>
-                                            <ErrorMessage name="email" component="div" className="error" />
                                             <div className="input-group input-group-outline mb-3">
                                                 <Field type="text" name='address' placeholder="Địa chỉ" className="form-control" />
+                                                <ErrorMessage name="address" component="div" className="error" />
                                             </div>
-                                            <ErrorMessage name="address" component="div" className="error" />
                                             <div className="text-center">
                                                 <button type="submit" className="btn bg-gradient-primary font-weight-bold w-100 my-4 mb-2" style={{ color: 'white' }}>Thêm</button>
                                             </div>

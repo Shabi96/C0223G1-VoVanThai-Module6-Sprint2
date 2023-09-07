@@ -15,6 +15,8 @@ public class Vest {
     @ManyToOne
     @JoinColumn(name = "id_status")
     private ItemStatus itemStatus;
+    private String rentedDate;
+    private String returnDate;
 
     public Vest() {
     }
@@ -25,6 +27,16 @@ public class Vest {
         this.flagDelete = flagDelete;
         this.item = item;
         this.itemStatus = itemStatus;
+    }
+
+    public Vest(Long idVest, String nameVest, Boolean flagDelete, Item item, ItemStatus itemStatus, String rentedDate, String returnDate) {
+        this.idVest = idVest;
+        this.nameVest = nameVest;
+        this.flagDelete = flagDelete;
+        this.item = item;
+        this.itemStatus = itemStatus;
+        this.rentedDate = rentedDate;
+        this.returnDate = returnDate;
     }
 
     public Long getIdVest() {
@@ -65,5 +77,21 @@ public class Vest {
 
     public void setItemStatus(ItemStatus itemStatus) {
         this.itemStatus = itemStatus;
+    }
+
+    public String getRentedDate() {
+        return rentedDate;
+    }
+
+    public void setRentedDate(String rentedDate) {
+        this.rentedDate = rentedDate;
+    }
+
+    public String getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(String returnDate) {
+        this.returnDate = returnDate;
     }
 }

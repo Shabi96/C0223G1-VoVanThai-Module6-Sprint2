@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DressService implements IDressService {
     @Autowired
@@ -15,5 +17,15 @@ public class DressService implements IDressService {
     @Override
     public Page<Dress> getAllByFlagDeleteIsFalseAndNameDressAndTypeDress_NameTypeDressAndItemStatus_NameStatus(Pageable pageable, String nameDress, String nameTypeDress, String nameStatus) {
         return dressRepository.getAllByFlagDeleteIsFalseAndNameDressContainingAndTypeDress_NameTypeDressContainingAndItemStatus_NameStatusContaining(pageable, nameDress, nameTypeDress, nameStatus);
+    }
+
+    @Override
+    public Dress getDressByName(String name) {
+        return dressRepository.getDressByFlagDeleteIsFalseAndNameDressContaining(name);
+    }
+
+    @Override
+    public List<Dress> getDressByFlagDeleteIsFalse() {
+        return dressRepository.getAllByFlagDeleteIsFalse();
     }
 }

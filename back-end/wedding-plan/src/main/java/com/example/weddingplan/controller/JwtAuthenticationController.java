@@ -3,21 +3,21 @@ package com.example.weddingplan.controller;
 
 import com.example.weddingplan.config.JwtTokenUtil;
 import com.example.weddingplan.model.Account;
+import com.example.weddingplan.model.Employee;
 import com.example.weddingplan.model.jwt.JwtRequest;
 import com.example.weddingplan.model.jwt.JwtResponse;
 import com.example.weddingplan.services.JwtUserDetailsService;
+import com.example.weddingplan.services.employee.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /*
 Expose a POST API /authenticate using the JwtAuthenticationController. The POST API gets username and password in the
@@ -37,6 +37,9 @@ public class JwtAuthenticationController {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
+    @Autowired
+    private IEmployeeService employeeService;
+
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody Account account) throws Exception {
         return ResponseEntity.ok(userDetailsService.save(account));
@@ -49,10 +52,12 @@ public class JwtAuthenticationController {
 
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(authenticationRequest.getUsername());
-
+        if (userDetails == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         final String token = jwtTokenUtil.generateToken(userDetails);
-
-        return ResponseEntity.ok(new JwtResponse(token));
+        Employee employee = employeeService.getEmployeeByEmail(authenticationRequest.getUsername());
+        return ResponseEntity.ok(new JwtResponse(token, employee.getEmail(), employee.getAccount().getRole().getNameRole(), employee.getNameEmployee()));
     }
 
 
@@ -64,5 +69,11 @@ public class JwtAuthenticationController {
         } catch (BadCredentialsException e) {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/test")
+    public ResponseEntity<?> getListTest(){
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

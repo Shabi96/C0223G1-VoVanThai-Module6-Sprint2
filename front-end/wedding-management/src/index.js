@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
-import NewNavBar from './components/Navbar';
+import NavBar from './components/Navbar';
 import ListLuxuryDress from './components/ListLuxuryDress';
 import ListStandard from './components/ListStandard';
 import ListVip from './components/ListVip';
@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 import Login from './components/Login';
 import CreateContract from './components/CreateContract';
 import CreateCustomer from './components/CreateCustomer';
+import Header from './components/Header';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -19,10 +20,12 @@ root.render(
     <BrowserRouter>
       <div className='row'>
         <div className='col-3'>
-          <NewNavBar />
+          <NavBar />
         </div>
         <div className='col-9'>
+          <Header />
           <Routes>
+            <Route path='/' element={<Login/>}></Route>
             <Route path='/luxury' element={<ListLuxuryDress />}></Route>
             <Route path='/standard' element={<ListStandard />}></Route>
             <Route path='/vip' element={<ListVip />}></Route>
@@ -31,8 +34,9 @@ root.render(
             <Route path='/create-contract' element={<CreateContract />}></Route>
             <Route path='/create-customer' element={<CreateCustomer />}></Route>
           </Routes>
-          <Footer />
+          
         </div>
+        <Footer />
       </div>
     </BrowserRouter>
   </React.StrictMode>

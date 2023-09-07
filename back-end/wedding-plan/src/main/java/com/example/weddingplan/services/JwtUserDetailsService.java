@@ -1,12 +1,14 @@
 package com.example.weddingplan.services;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 import com.example.weddingplan.model.Account;
 import com.example.weddingplan.repository.account.IAccountRepository;
 import com.example.weddingplan.repository.account.IRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -43,7 +45,7 @@ public class JwtUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
         return new User(account.getUsername(), account.getPassword(),
-                new ArrayList<>());
+                new ArrayList<>(Collections.singleton(new SimpleGrantedAuthority(account.getRole().getNameRole()))));
     }
 
     public Account save(Account account) {
