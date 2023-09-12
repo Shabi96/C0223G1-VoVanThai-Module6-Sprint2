@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 
+import com.example.weddingplan.dto.EmployeeDTO;
 import com.example.weddingplan.model.Account;
+import com.example.weddingplan.model.Employee;
 import com.example.weddingplan.repository.account.IAccountRepository;
 import com.example.weddingplan.repository.account.IRoleRepository;
+import com.example.weddingplan.services.employee.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -38,6 +41,9 @@ public class JwtUserDetailsService implements UserDetailsService {
     @Autowired
     private IRoleRepository IRoleRepository;
 
+    @Autowired
+    private IEmployeeService employeeService;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = accountRepository.findByUsername(username);
@@ -48,12 +54,21 @@ public class JwtUserDetailsService implements UserDetailsService {
                 new ArrayList<>(Collections.singleton(new SimpleGrantedAuthority(account.getRole().getNameRole()))));
     }
 
-    public Account save(Account account) {
+    public Account save(EmployeeDTO employeeDTO) {
         Account newAccount = new Account();
-        newAccount.setUsername(account.getUsername());
-        newAccount.setPassword(bcryptEncoder.encode(account.getPassword()));
+        newAccount.setUsername(employeeDTO.getEmail());
+        newAccount.setPassword(bcryptEncoder.encode(employeeDTO.getPassword()));
         newAccount.setFlagDelete(false);
         newAccount.setRole(IRoleRepository.findById(1L).orElse(null));
-        return accountRepository.save(newAccount);
+        accountRepository.save(newAccount);
+        Employee employee = new Employee();
+        employee.setNameEmployee(employeeDTO.getNameEmployee());
+        employee.setEmail(employeeDTO.getEmail());
+        employee.setAddress(employeeDTO.getAddress());
+        employee.setFlagDelete(false);
+        employee.setPhone(employeeDTO.getPhone());
+        employee.setAccount(newAccount);
+        employeeService.addNewEmployee(employee);
+        return newAccount;
     }
 }

@@ -57,7 +57,7 @@ export default function NavBar() {
                                     </ul>
                                 </li>
                                 <li>
-                                    <a ><i class="fa-solid fa-person-half-dress"></i><span> Vest</span></a>
+                                    <Link to={`/vest`}><i class="fa-solid fa-person-half-dress"></i><span> Vest</span></Link>
                                 </li>
                                 <li>
                                     <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">

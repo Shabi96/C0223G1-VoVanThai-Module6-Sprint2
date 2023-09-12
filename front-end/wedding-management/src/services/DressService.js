@@ -5,12 +5,17 @@ export async function getListDress(page, nameDress, nameTypeDress, nameStatus) {
     return res.data;
 }
 
-export async function getDressByName(name) {
-    const res = await axios.get('http://localhost:8080/dress/' + name);
+export async function getDressById(id) {
+    const res = await axios.get('http://localhost:8080/dress/' + id);
     return res.data;
 }
 
-export async function getAllDress(date) {
-    const res = await axios.get('http://localhost:8080/dress/date/' + date);
+export async function getAllDress(typeDress, date) {
+    const res = await axios.get('http://localhost:8080/dress/rented/' + typeDress + "/" + date);
+    return res.data;
+}
+
+export async function getAllStatus() {
+    const res = await axios.get('http://localhost:8080/status');
     return res.data;
 }

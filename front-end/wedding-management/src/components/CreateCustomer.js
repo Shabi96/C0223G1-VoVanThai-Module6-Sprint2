@@ -39,7 +39,9 @@ export default function CreateCustomer() {
                                             address: yup.string().required()
                                         })}
                                         onSubmit={async (values) => {
-                                            await createCustomer(values).then(() => {
+                                            console.log(values);
+                                            try {
+                                                await createCustomer(values).then(() => {
                                                 Swal.fire({
                                                     icon: 'success',
                                                     title: 'Thêm mới thành công!!!!',
@@ -48,6 +50,16 @@ export default function CreateCustomer() {
                                                 })
                                                 navigate("/create-contract");
                                             })
+                                            } catch (error) {
+                                                Swal.fire({
+                                                    icon: 'warning',
+                                                    title: 'Khách hàng đã tồn tại!!!!',
+                                                    showConfirmButton: false,
+                                                    timer: 1500
+                                                })
+                                                return
+                                            }
+                                            
                                         }}>
                                         <Form>
                                             <div className=" input-group input-group-outline my-3">

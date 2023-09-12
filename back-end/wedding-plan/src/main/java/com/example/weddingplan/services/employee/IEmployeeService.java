@@ -4,5 +4,5 @@ import com.example.weddingplan.model.Employee;
 
 public interface IEmployeeService {
     Employee getEmployeeByEmail(String email);
-
+    void addNewEmployee(Employee employee);
 }

@@ -55,7 +55,7 @@ CREATE TABLE `wedding_manager`.`role` (
   CREATE TABLE `wedding_manager`.`account` (
   `id_account` BIGINT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NOT NULL,
-  `password` BIT(1) NOT NULL,
+  `password` longtext NOT NULL,
   `flag_delete` BIT(1) NOT NULL,
   `id_role` BIGINT NOT NULL,
   PRIMARY KEY (`id_account`),

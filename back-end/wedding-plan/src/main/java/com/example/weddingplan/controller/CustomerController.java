@@ -26,6 +26,9 @@ public class CustomerController {
     @PostMapping("")
     public ResponseEntity<?> createCustomer(@RequestBody Customer customer) {
         try {
+            if (customerService.getCustomerByPhone(customer.getPhone()) != null) {
+                return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            }
             customer.setFlagDelete(false);
             customerService.addNewCustomer(customer);
             return new ResponseEntity<>(HttpStatus.CREATED);

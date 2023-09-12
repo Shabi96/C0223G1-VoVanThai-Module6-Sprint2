@@ -2,7 +2,7 @@ package com.example.weddingplan.controller;
 
 
 import com.example.weddingplan.config.JwtTokenUtil;
-import com.example.weddingplan.model.Account;
+import com.example.weddingplan.dto.EmployeeDTO;
 import com.example.weddingplan.model.Employee;
 import com.example.weddingplan.model.jwt.JwtRequest;
 import com.example.weddingplan.model.jwt.JwtResponse;
@@ -41,8 +41,11 @@ public class JwtAuthenticationController {
     private IEmployeeService employeeService;
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResponseEntity<?> saveUser(@RequestBody Account account) throws Exception {
-        return ResponseEntity.ok(userDetailsService.save(account));
+    public ResponseEntity<?> saveUser(@RequestBody EmployeeDTO employeeDTO) throws Exception {
+        if (employeeService.getEmployeeByEmail(employeeDTO.getEmail()) != null) {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
+        return ResponseEntity.ok(userDetailsService.save(employeeDTO));
     }
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)

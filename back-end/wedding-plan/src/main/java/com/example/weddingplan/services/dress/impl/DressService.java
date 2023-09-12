@@ -1,6 +1,7 @@
 package com.example.weddingplan.services.dress.impl;
 
 import com.example.weddingplan.model.Dress;
+import com.example.weddingplan.projection.IDressProjection;
 import com.example.weddingplan.repository.dress.IDressRepository;
 import com.example.weddingplan.services.dress.IDressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,25 @@ public class DressService implements IDressService {
     @Override
     public List<Dress> getDressByFlagDeleteIsFalse() {
         return dressRepository.getAllByFlagDeleteIsFalse();
+    }
+
+    @Override
+    public List<Dress> getAllByNameTypeDress(String typeDress) {
+        return dressRepository.getAllByFlagDeleteIsFalseAndTypeDress_NameTypeDress(typeDress);
+    }
+
+    @Override
+    public Dress getDressByFlagDeleteIsFalseAndIdDress(Long id) {
+        return dressRepository.getDressByFlagDeleteIsFalseAndIdDress(id);
+    }
+
+    @Override
+    public List<IDressProjection> getDressRented(String name, String date) {
+        return dressRepository.getDressRented(name, date);
+    }
+
+    @Override
+    public void addNewDress(Dress dress) {
+        dressRepository.save(dress);
     }
 }

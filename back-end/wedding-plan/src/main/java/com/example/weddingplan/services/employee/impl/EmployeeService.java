@@ -14,4 +14,9 @@ public class EmployeeService implements IEmployeeService {
     public Employee getEmployeeByEmail(String email) {
         return employeeRepository.getEmployeeByFlagDeleteIsFalseAndEmail(email);
     }
+
+    @Override
+    public void addNewEmployee(Employee employee) {
+        employeeRepository.save(employee);
+    }
 }

@@ -13,6 +13,8 @@ import Login from './components/Login';
 import CreateContract from './components/CreateContract';
 import CreateCustomer from './components/CreateCustomer';
 import Header from './components/Header';
+import Register from './components/Register';
+import Vest from './components/Vest';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -33,6 +35,8 @@ root.render(
             <Route path='/login' element={<Login />}></Route>
             <Route path='/create-contract' element={<CreateContract />}></Route>
             <Route path='/create-customer' element={<CreateCustomer />}></Route>
+            <Route path='/register' element={<Register />}></Route>
+            <Route path='/vest' element={<Vest />}></Route>
           </Routes>
           
         </div>
