@@ -1,6 +1,7 @@
 package com.example.weddingplan.model;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class Contract {
@@ -18,6 +19,11 @@ public class Contract {
     @OneToOne
     @JoinColumn(name = "id_employee")
     private Employee employee;
+    private Boolean statusContract;
+    private Double deposit;
+    private Double totalPrice;
+    private LocalDateTime contractDate;
+    private Boolean cancelContract;
 
     public Contract() {
     }
@@ -29,6 +35,33 @@ public class Contract {
         this.combo = combo;
         this.customer = customer;
         this.employee = employee;
+    }
+
+    public Contract(Long idContract, String startDate, String endDate, Combo combo, Customer customer, Employee employee, Boolean statusContract, Double deposit, Double totalPrice, LocalDateTime contractDate) {
+        this.idContract = idContract;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.combo = combo;
+        this.customer = customer;
+        this.employee = employee;
+        this.statusContract = statusContract;
+        this.deposit = deposit;
+        this.totalPrice = totalPrice;
+        this.contractDate = contractDate;
+    }
+
+    public Contract(Long idContract, String startDate, String endDate, Combo combo, Customer customer, Employee employee, Boolean statusContract, Double deposit, Double totalPrice, LocalDateTime contractDate, Boolean cancelContract) {
+        this.idContract = idContract;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.combo = combo;
+        this.customer = customer;
+        this.employee = employee;
+        this.statusContract = statusContract;
+        this.deposit = deposit;
+        this.totalPrice = totalPrice;
+        this.contractDate = contractDate;
+        this.cancelContract = cancelContract;
     }
 
     public void setIdContract(Long id) {
@@ -77,5 +110,45 @@ public class Contract {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
+    }
+
+    public Boolean getStatusContract() {
+        return statusContract;
+    }
+
+    public void setStatusContract(Boolean statusContract) {
+        this.statusContract = statusContract;
+    }
+
+    public Double getDeposit() {
+        return deposit;
+    }
+
+    public void setDeposit(Double deposit) {
+        this.deposit = deposit;
+    }
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public LocalDateTime getContractDate() {
+        return contractDate;
+    }
+
+    public void setContractDate(LocalDateTime contractDate) {
+        this.contractDate = contractDate;
+    }
+
+    public Boolean getCancelContract() {
+        return cancelContract;
+    }
+
+    public void setCancelContract(Boolean cancelContract) {
+        this.cancelContract = cancelContract;
     }
 }

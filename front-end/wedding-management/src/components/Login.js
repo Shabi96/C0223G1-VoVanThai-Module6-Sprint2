@@ -17,6 +17,10 @@ export default function Login() {
     }
 
     useEffect(() => {
+        document.title = 'Đăng nhập'
+    },[])
+
+    useEffect(() => {
         const user = localStorage.getItem("username");
         if (user) {
             getUser(user);
@@ -57,23 +61,33 @@ export default function Login() {
                                 <div className="card-body">
                                     <Formik initialValues={{ username: '', password: '' }}
                                         validationSchema={yup.object({
-                                            username: yup.string().required(),
-                                            password: yup.string().required()
+                                            username: yup.string().required("Vui lòng nhập email"),
+                                            password: yup.string().required("Vui lòng điền mật khẩu!!!!")
                                         })}
                                         onSubmit={async (values) => {
-                                            const data = await loginByAccount(values);
-                                            localStorage.setItem("token", data.jwtToken);
-                                            localStorage.setItem("username", data.username);
-                                            localStorage.setItem("role", data.nameRole);
-                                            localStorage.setItem("nameUser", data.nameEmployee);
-                                            console.log(localStorage);
-                                            Swal.fire({
-                                                icon: 'success',
-                                                title: 'Đăng nhập thành công!!!!',
-                                                showConfirmButton: false,
-                                                timer: 1500
-                                            })
-                                            navigate('/create-contract');
+                                            try {
+                                                const data = await loginByAccount(values);
+                                                localStorage.setItem("token", data.jwtToken);
+                                                localStorage.setItem("username", data.username);
+                                                localStorage.setItem("role", data.nameRole);
+                                                localStorage.setItem("nameUser", data.nameEmployee);
+                                                console.log(localStorage);
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: 'Đăng nhập thành công!!!!',
+                                                    showConfirmButton: false,
+                                                    timer: 1500
+                                                })
+                                                navigate('/contract');
+                                            } catch (error) {
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Đăng nhập thất bại!!!!',
+                                                    showConfirmButton: false,
+                                                    timer: 1500
+                                                })
+                                            }
+
                                         }}>
                                         <Form>
                                             <div className="input-group input-group-outline my-3">

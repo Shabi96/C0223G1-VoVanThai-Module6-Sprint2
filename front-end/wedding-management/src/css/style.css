@@ -11804,8 +11804,8 @@ h5,
 }
 
 #sidebar {
-    min-width: 250px;
-    max-width: 250px;
+    min-width: 280px;
+    max-width: 280px;
     background: #866ec7;
     color: #fff;
     -webkit-transition: all 0.3s;
@@ -11819,7 +11819,7 @@ h5,
 }
 
 #sidebar.active {
-    margin-left: -250px;
+    margin-left: -300px;
 }
 
 #sidebar.active .custom-menu {
@@ -11869,7 +11869,22 @@ h5,
 
 @media (max-width: 991.98px) {
     #sidebar {
-        margin-left: -250px;
+        margin-left: -280px;
+    }
+
+    #sidebar.active {
+        margin-left: 0;
+    }
+
+    #sidebar .custom-menu {
+        margin-right: -50px !important;
+        top: 10px !important;
+    }
+}
+
+@media (max-width: 780px) {
+    #sidebar {
+        margin-left: -280px;
     }
 
     #sidebar.active {
@@ -11963,7 +11978,7 @@ a[data-toggle="collapse"] {
 }
 
 .form-control {
-    height: 40px !important;
+    height: 40px;
     background: #fff;
     color: #000;
     font-size: 13px;
@@ -12006,7 +12021,24 @@ a[data-toggle="collapse"] {
 .bg-gradient-success {
     background-image: linear-gradient(195deg, #66bb6a, #43a047)
 }
+.bg-gradient-information {
+    background-image: linear-gradient(195deg, #17a2b8, #17a2b8);
+}
 
+.bg-gradient-secondary {
+    background-image: linear-gradient(195deg, #ffc107, #ffc107)
+}
+.bg-gradient-warning {
+    background-image: linear-gradient(195deg, #6c757d, #6c757d)
+}
+.bg-gradient-details {
+    background-image: linear-gradient(195deg, #BA7E7E, #BA7E7E);
+    border-radius: 0.5rem;
+}
+.bg-gradient-error {
+    background-image: linear-gradient(195deg, red, red);
+    border-radius: 0.5rem;
+}
 .navbar>.container,
 .navbar>.container-fluid,
 .navbar>.container-lg,
@@ -12042,7 +12074,7 @@ a[data-toggle="collapse"] {
     border: none;
 }
 
-.select-top10 {
+.modal {
     position: fixed;
     top: 0;
     right: 0;
@@ -12062,7 +12094,41 @@ a[data-toggle="collapse"] {
 
 .modal_body {
     width: 600px;
-    height: 370px;
+    height: 400px;
+    background-color: white;
+    margin: auto;
+    border-radius: 5px;
+    z-index: 999;
+}
+.modal_overlay_details {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(26, 25, 25, 0.21);
+
+}
+
+.modal_body_details {
+    width: 600px;
+    min-height: 400px;
+    background-color: white;
+    margin: auto;
+    border-radius: 5px;
+    z-index: 999;
+}
+
+.modal_body1 {
+    width: 600px;
+    height: 470px;
+    background-color: white;
+    margin: auto;
+    border-radius: 5px;
+    z-index: 999;
+}
+
+.modal_body_deposit {
+    min-width: 400px;
+    min-height: 400px;
     background-color: white;
     margin: auto;
     border-radius: 5px;
@@ -12151,7 +12217,7 @@ a[data-toggle="collapse"] {
     line-height: 24px;
     height: 24px;
     font-size: 12px;
-    color: #166987;
+    color: #866ec7;
 }
 
 .modal_inner .form-checkbox input {
@@ -12207,10 +12273,9 @@ a[data-toggle="collapse"] {
     width: 10px;
     height: 10px;
 }
-
-.modal_inner .form-btn .home-btn {
+.modal_body_contract .form-btn .home-btn {
     color: #fff;
-    background-color: #daa310;
+    background-color: #866ec7;
     font-weight: 400;
     height: 50px;
     font-size: 18px;
@@ -12218,6 +12283,52 @@ a[data-toggle="collapse"] {
     width: 70%;
     border-radius: 4px;
     margin-left: 50px;
+}
+
+.modal_inner .form-btn .home-btn {
+    color: #fff;
+    background-color: #866ec7;
+    font-weight: 400;
+    height: 50px;
+    font-size: 18px;
+    border: none;
+    width: 70%;
+    border-radius: 4px;
+    margin-left: 50px;
+}
+
+.modal_inner_contract .form-btn .home-btn {
+    color: #fff;
+    background-color: #866ec7;
+    font-weight: 400;
+    height: 50px;
+    font-size: 18px;
+    border: none;
+    width: 70%;
+    border-radius: 4px;
+    margin-left: 50px;
+}
+
+.modal_inner_endContract .form-btn-remain-contract .home-btn {
+    color: #fff;
+    background-color: #866ec7;
+    font-weight: 400;
+    height: 50px;
+    font-size: 15px;
+    border: none;
+    width: 100%;
+    border-radius: 4px;
+}
+
+.form-btn .home-btn {
+    color: #fff;
+    background-color: #866ec7;
+    font-weight: 400;
+    height: 50px;
+    font-size: 15px;
+    border: none;
+    width: 100%;
+    border-radius: 4px;
 }
 
 .modal_inner h1 {
@@ -12230,11 +12341,12 @@ a[data-toggle="collapse"] {
 .modal_inner p {
     font-size: 25px;
     color: #191a1e;
+
 }
 
 .modal_inner .form-btn .back-btn {
     color: #fff;
-    background-color: #166987;
+    background-color: #ba8b00;
     font-weight: 400;
     height: 50px;
     font-size: 18px;
@@ -12243,6 +12355,30 @@ a[data-toggle="collapse"] {
     border-radius: 4px;
     margin-left: 50px;
 
+}
+
+
+.modal_body_contract .form-btn .back-btn {
+    color: #fff;
+    background-color: #ba8b00;
+    font-weight: 400;
+    height: 50px;
+    font-size: 18px;
+    border: none;
+    width: 70%;
+    border-radius: 4px;
+    margin-left: 50px;
+}
+
+.modal_inner_endContract .form-btn-remain-contract .back-btn {
+    color: #fff;
+    background-color: #ba8b00;
+    font-weight: 400;
+    height: 50px;
+    font-size: 15px;
+    border: none;
+    width: 100%;
+    border-radius: 4px;
 }
 
 .modal_inner .title-bonus {
@@ -12281,6 +12417,7 @@ a[data-toggle="collapse"] {
     height: 40px;
     justify-items: end;
 }
+
 .input-search {
     border-radius: 5px;
     border: 2px solid #866ec7;
@@ -12288,6 +12425,11 @@ a[data-toggle="collapse"] {
     color: #866ec7;
     font-weight: bold;
 }
+
+.form-search input:focus {
+    border-color: #866ec7;
+}
+
 .select-search {
     margin-left: 10px;
     margin-right: 10px;
@@ -12296,14 +12438,16 @@ a[data-toggle="collapse"] {
     border-radius: 5px;
     color: #866ec7;
     font-weight: bold;
-    
+
 }
+
 .form-search {
     margin-bottom: 20px;
     text-align: center;
     justify-content: center;
     align-items: center;
 }
+
 .form-search button {
     height: 40px;
     width: 40px;
@@ -12311,4 +12455,91 @@ a[data-toggle="collapse"] {
     border: none;
     background-color: #866ec7;
     color: white;
+}
+
+.start-pointor {
+    border: 2px solid #dfe5e9;
+    border-radius: 4px;
+    min-height: 75px;
+}
+
+.start-pointor__title {
+    padding-bottom: 6px;
+    color: #866ec7;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.select-select {
+    justify-content: space-around;
+}
+
+.remain-contract {
+    justify-content: space-around;
+}
+/* .detail-deposit {
+    justify-content: space-around;
+} */
+
+.modal_overlay_contract {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(26, 25, 25, 0.21);
+
+}
+
+.modal_body_contract {
+    min-width: 400px;
+    min-height: 200px;
+    background-color: white;
+    margin: auto;
+    border-radius: 5px;
+    z-index: 999;
+}
+
+.modal_overlay_endContract {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(26, 25, 25, 0.21);
+
+}
+
+.modal_body_endContract {
+    min-width: 400px;
+    min-height: 200px;
+    background-color: white;
+    margin: auto;
+    border-radius: 5px;
+    z-index: 9999;
+}
+
+.form-btn {
+    margin-bottom: 20px;
+}
+.form-btn-remain-contract {
+    margin-bottom: 20px;
+}
+.input-search::placeholder {
+    color: #866ec7;
+}
+::-webkit-scrollbar {
+    width: 0.8rem;
+}
+
+::-webkit-scrollbar-track {
+    background-color: white;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #866ec7;
+    border-radius: 10px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb :hover {
+    background-color: white;
 }

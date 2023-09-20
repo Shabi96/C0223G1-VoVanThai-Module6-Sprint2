@@ -1,13 +1,17 @@
 package com.example.weddingplan.controller;
 
+import com.example.weddingplan.model.ContractDetail;
 import com.example.weddingplan.model.Dress;
+import com.example.weddingplan.services.contract.IContractDetailService;
 import com.example.weddingplan.services.dress.IDressService;
+import com.example.weddingplan.services.status.IStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -21,6 +25,13 @@ public class DressController {
     @Autowired
     private IDressService dressService;
 
+    @Autowired
+    private IStatusService statusService;
+
+    @Autowired
+    private IContractDetailService contractDetailService;
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/list")
     public ResponseEntity<Page<Dress>> getListDress(@PageableDefault(size = 5) Pageable pageable,
                                           @RequestParam("page") String page,
@@ -35,6 +46,18 @@ public class DressController {
             }
         } catch (NumberFormatException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        List<Dress> dressList = dressService.getDressByDateMaintenanceIsNotNullAndFlagDeleteIsFalseAndItemStatus_IdStatus(3L);
+        LocalDate localDate = LocalDate.now();
+        for (Dress d: dressList) {
+            if (d.getDateMaintenance() != null) {
+                LocalDate dateMaintenance = LocalDate.parse(d.getDateMaintenance());
+                if (dateMaintenance.plusDays(4).isEqual(localDate)) {
+                    d.setItemStatus(statusService.getById(1L));
+                    d.setDateMaintenance(null);
+                    dressService.addNewDress(d);
+                }
+            }
         }
         Page<Dress> dressPage = dressService.getAllByFlagDeleteIsFalseAndNameDressAndTypeDress_NameTypeDressAndItemStatus_NameStatus(pageable, nameDress, nameTypeDress, nameStatus);
         if (dressPage.isEmpty()) {
@@ -51,21 +74,41 @@ public class DressController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/date/{date}/{typeDress}")
-    public ResponseEntity<?> getDress(@PathVariable String date, @PathVariable String typeDress) {
-        LocalDate targetDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
-        if (dressService.getAllByNameTypeDress(typeDress).size() == 0) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        List<Dress> findListDress = new ArrayList<>();
-        return new ResponseEntity<>(findListDress, HttpStatus.OK);
-    }
+//    @GetMapping("/date/{date}/{typeDress}")
+//    public ResponseEntity<?> getDress(@PathVariable String date, @PathVariable String typeDress) {
+//        LocalDate targetDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+//        if (dressService.getAllByNameTypeDress(typeDress).size() == 0) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//        List<Dress> findListDress = new ArrayList<>();
+//        return new ResponseEntity<>(findListDress, HttpStatus.OK);
+//    }
 
     @GetMapping("/rented/{name}/{date}")
     public ResponseEntity<?> getListDressRented(@PathVariable String name, @PathVariable String date) {
-        if (dressService.getDressRented(name, date).isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        List<Dress> dressReadyList = dressService.getDressReady(name, 1L);
+        List<Dress> resultDressList = new ArrayList<>(dressReadyList);
+        List<Dress> dressRentedList = dressService.getDressReady(name, 2L);
+        LocalDate targetDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+        for (Dress dress : dressRentedList) {
+            boolean flag = true;
+            List<ContractDetail> dressList = contractDetailService.getContractDetailByDress_IdDressAndContract_CancelContractIsFalseAndContract_StatusContractIsFalse(dress.getIdDress());
+            if (!dressList.isEmpty()) {
+                for (ContractDetail contractDetail : dressList) {
+                    LocalDate startDate = LocalDate.parse(contractDetail.getContract().getStartDate(), DateTimeFormatter.ISO_DATE);
+                    LocalDate endDate = LocalDate.parse(contractDetail.getContract().getEndDate(), DateTimeFormatter.ISO_DATE);
+                    if (!(targetDate.isBefore(startDate.minusDays(10)) || targetDate.isAfter(endDate.plusDays(7)))) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) {
+                    resultDressList.add(dress);
+                }
+            } else {
+                resultDressList.add(dress);
+            }
         }
-        return new ResponseEntity<>(dressService.getDressRented(name, date), HttpStatus.OK);
+        return new ResponseEntity<>(resultDressList, HttpStatus.OK);
     }
 }

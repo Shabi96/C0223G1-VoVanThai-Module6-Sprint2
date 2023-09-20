@@ -16,17 +16,46 @@ public class Vest {
     @JoinColumn(name = "id_status")
     private ItemStatus itemStatus;
 
+    private String image;
+    private String information;
+    private String dateMaintenance;
+    private Integer maintenanceTimes;
+
     public Vest() {
     }
 
-    public Vest(Long idVest, String nameVest, Boolean flagDelete, Item item, ItemStatus itemStatus) {
+    public String getInformation() {
+        return information;
+    }
+
+    public void setInformation(String information) {
+        this.information = information;
+    }
+
+    public String getDateMaintenance() {
+        return dateMaintenance;
+    }
+
+    public void setDateMaintenance(String dateMaintenance) {
+        this.dateMaintenance = dateMaintenance;
+    }
+
+    public Integer getMaintenanceTimes() {
+        return maintenanceTimes;
+    }
+
+    public void setMaintenanceTimes(Integer maintenanceTimes) {
+        this.maintenanceTimes = maintenanceTimes;
+    }
+
+    public Vest(Long idVest, String nameVest, Boolean flagDelete, Item item, ItemStatus itemStatus, String image) {
         this.idVest = idVest;
         this.nameVest = nameVest;
         this.flagDelete = flagDelete;
         this.item = item;
         this.itemStatus = itemStatus;
+        this.image = image;
     }
-
 
     public Long getIdVest() {
         return idVest;
@@ -68,4 +97,11 @@ public class Vest {
         this.itemStatus = itemStatus;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 }

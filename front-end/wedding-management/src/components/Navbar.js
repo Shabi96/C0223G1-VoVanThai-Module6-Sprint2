@@ -1,19 +1,29 @@
 import React, { useEffect, useState } from "react";
 import '../css/style.css';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import image from '../Wedding.png';
 
+
 export default function NavBar() {
+    const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const location = useLocation();
 
     const getUser = async (username) => {
         setUser(username);
     }
-
+    const handleLogout = async () => {
+        localStorage.removeItem("username");
+        localStorage.removeItem("nameUser");
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        setUser('');
+        navigate('/login');
+    }
 
     useEffect(() => {
         const data = localStorage.getItem("username");
+
         if (data) {
             getUser(data);
         } else {
@@ -65,19 +75,35 @@ export default function NavBar() {
                                         <span> Hợp đồng</span></a>
                                     <ul className="collapse list-unstyled" id="pageSubmenu">
                                         <li>
-                                            <Link to={`/create-contract`}>Thêm mới hợp đồng</Link>
+                                            <Link to={`/create-contract`}>Thêm mới</Link>
                                         </li>
                                         <li>
-                                            <Link to={`/contract`}>Đang thuê</Link>
+                                            <Link to={`/contract`}>Danh sách</Link>
                                         </li>
-                                        <li>
+                                        {/* <li>
                                             <Link href="#">Đã xong</Link>
-                                        </li>
+                                        </li> */}
                                     </ul>
                                 </li>
                                 <li>
-                                    <a href="#"><i class="fa-solid fa-user"></i><span> Cá nhân</span></a>
+                                    <a href="#pageSubmenu1" data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">
+                                        <i class="fa-solid fa-user"></i>
+                                        <span> Cá nhân</span></a>
+                                    <ul className="collapse list-unstyled" id="pageSubmenu1">
+                                        <li>
+                                            <Link>Thông tin</Link>
+                                        </li>
+                                        {/* <li>
+                                            <a onClick={() => handleLogout()} >Đăng xuất</a>
+                                        </li> */}
+                                        {/* <li>
+                                            <Link href="#">Đã xong</Link>
+                                        </li> */}
+                                    </ul>
                                 </li>
+                                {/* <li>
+                                    <a href="#"><i class="fa-solid fa-user"></i><span> Cá nhân</span></a>
+                                </li> */}
                             </ul>
 
                             <div className="footer">

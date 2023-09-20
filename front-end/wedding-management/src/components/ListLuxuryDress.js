@@ -1,21 +1,61 @@
 import React, { useEffect, useState } from "react";
 import moment from 'moment';
-import {getAllStatus, getListDress } from "../services/DressService";
+import { getAllStatus, getDressById, getListDress } from "../services/DressService";
 import Swal from "sweetalert2";
+import { getContractDetailsByIdDress } from "../services/ContractDetailService";
 
 export default function ListStandard() {
     const [luxuries, setLuxuries] = useState([]);
     const [nameDress, setNameDress] = useState('');
     const [nameTypeDress, setNameTypeDress] = useState('LUXURY');
     const [nameStatus, setNameStatus] = useState('');
-    const [page, setPage] = useState(0);
+    let [page, setPage] = useState(0);
     const [statusList, setStatusList] = useState([]);
+    const [isOpen, setIsOpen] = useState(true);
+    const [dress, setDress] = useState(null);
+    const [listDressRented, setListDressRented] = useState([]);
+
+    const headers = {
+        "Authorization": 'Bearer ' + localStorage.getItem('token')
+    }
+
+    const openModal = async () => {
+        setIsOpen(true);
+    };
+
+    const closeModal = async () => {
+        setIsOpen(false);
+    };
+
+    const handleGetDress = async (id) => {
+        try {
+            const data = await getDressById(id);
+            if (data.itemStatus.idStatus == 2) {
+                try {
+                    setListDressRented(await getContractDetailsByIdDress(id));
+                } catch (error) {
+                    console.log("Không có ngày thuê");
+                }
+            } else {
+                setListDressRented([]);
+            }
+            setDress(data);
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Không tìm thấy',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        }
+        openModal();
+    }
 
 
 
     const getAllStands = async (page, nameDress, nameTypeDress, nameStatus) => {
         try {
-            const data = await getListDress(page, nameDress, nameTypeDress, nameStatus);
+            const data = await getListDress(page, nameDress, nameTypeDress, nameStatus, headers);
             setLuxuries(data);
         } catch (error) {
             console.log("Không có dữ liệu!!!!");
@@ -25,7 +65,7 @@ export default function ListStandard() {
     const getStatus = async () => {
         try {
             const data = await getAllStatus();
-            setStatusList(data);    
+            setStatusList(data);
         } catch (error) {
             console.log("Không có dữ liệu");
         }
@@ -35,21 +75,11 @@ export default function ListStandard() {
         setPage(page);
     }
 
-    const setNameDressFunction = async (nameDressSearch) => {
-        setNameDress(nameDressSearch);
-    }
-
-    const setNameTypeDressFunction = async (nameTypeDressSearch) => {
-        setNameTypeDress(nameTypeDressSearch);
-    }
-
-    const setNameStatusFunction = async (nameStatusSearch) => {
-        setNameStatus(nameStatusSearch);
-    }
 
     const handleSearch = async () => {
         try {
-            const data = await getListDress(page, nameDress, nameTypeDress, nameStatus);
+            setPage(0);
+            const data = await getListDress(0, nameDress.trim(), nameTypeDress, nameStatus, headers);
             setLuxuries(data);
         } catch (error) {
             Swal.fire({
@@ -59,33 +89,42 @@ export default function ListStandard() {
                 timer: 1500
             })
         }
-        
+
+    }
+    const handleEnter = async (e) => {
+        const key = e.keyCode;
+        if (key == 13) {
+            handleSearch()
+        }
     }
     const nextPage = async () => {
         console.log("da vao nextPage");
         page += 1;
-        if(page < luxuries.totalPages) {
-            await setPageFunction(page).then(setLuxuries(await getListDress(page, nameDress, nameTypeDress, nameStatus)));
+        if (page < luxuries.totalPages) {
+            await setPageFunction(page).then(setLuxuries(await getListDress(page, nameDress, nameTypeDress, nameStatus, headers)));
         } else {
             page -= 1;
         }
     }
 
     const previousPage = async () => {
-        if(page >= 1) {
+        if (page >= 1) {
             page -= 1;
         }
-        await setPageFunction(page).then(setLuxuries(await getListDress(page, nameDress, nameTypeDress, nameStatus)));
+        await setPageFunction(page).then(setLuxuries(await getListDress(page, nameDress, nameTypeDress, nameStatus, headers)));
     }
 
-    console.log(luxuries);
+    useEffect(() => {
+        document.title = 'Váy Luxury'
+    },[])
+
     useEffect(() => {
         getAllStands(page, nameDress, nameTypeDress, nameStatus);
         getStatus()
     }, []);
 
     return (
-        <div className="container-fluid py-4">
+        <div className="py-1">
             <div className="row">
                 <div className="col-12">
                     <div className="card my-4">
@@ -95,11 +134,15 @@ export default function ListStandard() {
                             </div>
                         </div>
                         <div className="card-body pb-2">
-                        <div className="form-search">
-                                <input type="text" className="input-search" placeholder="Nhập tên" onChange={(e) => setNameDress(e.target.value)}/>
+                            <div className="form-search">
+                                <input type="text" className="input-search"
+                                    onKeyDown={(e) => handleEnter(e)}
+                                    placeholder="Tên váy..." onChange={(e) => setNameDress(e.target.value)} />
                                 {
                                     statusList.length > 0 &&
-                                    <select className="select-search" onChange={(e) => setNameStatus(e.target.value)}>
+                                    <select className="select-search"
+                                        onKeyDown={(e) => handleEnter(e)}
+                                        onChange={(e) => setNameStatus(e.target.value)}>
                                         <option value={''}>Trạng thái</option>
                                         {statusList.map((stt, index) => {
                                             return (
@@ -110,15 +153,15 @@ export default function ListStandard() {
                                 }
                                 <button type="button" onClick={() => handleSearch()}><i class="fa-solid fa-magnifying-glass"></i></button>
                             </div>
-                            <div className="table-responsive p-0">
+                            <div className="table-responsive table-striped p-0">
                                 <table className="table align-items-center mb-0">
                                     <thead>
-                                        <tr>
-                                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Mã váy</th>
-                                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tên váy</th>
-                                            <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Trạng thái</th>
-                                            <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày thuê</th>
-                                            <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày trả</th>
+                                        <tr style={{ color: '#866ec7' }}>
+                                            <th className="text-uppercase text-center text-xxs font-weight-bolder opacity-7">STT</th>
+                                            <th className="text-uppercase text-xxs text-center font-weight-bolder opacity-7">Mã váy</th>
+                                            <th className="text-uppercase text-center text-xxs font-weight-bolder opacity-7 ps-2">Tên váy</th>
+                                            <th className="text-center text-uppercase text-xxs font-weight-bolder opacity-7">Trạng thái</th>
+                                            <th className="text-center text-uppercase text-xxs font-weight-bolder opacity-7">Hành động</th>
                                             <th className="text-secondary opacity-7" />
                                         </tr>
                                     </thead>
@@ -128,31 +171,37 @@ export default function ListStandard() {
                                                 return (
                                                     <tr key={index}>
                                                         <td>
-                                                            <div className="d-flex px-2 py-1">
-                                                                {/*                      <div>*/}
-                                                                {/*                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">*/}
-                                                                {/*                      </div>*/}
-                                                                <div className="d-flex flex-column justify-content-center">
-                                                                    <h6 className="mb-0 text-sm">LUX-{st.idDress}</h6>
-                                                                    {/*                        <p class="text-xs text-secondary mb-0">john@creative-tim.com</p>*/}
-                                                                </div>
-                                                            </div>
+                                                            <p className="text-xs text-center font-weight-bold mb-0">{(index + 1) + (page * 5)}</p>
                                                         </td>
                                                         <td>
-                                                            <p className="text-xs font-weight-bold mb-0">{st.nameDress}</p>
+                                                            <p className="text-xs text-center font-weight-bold mb-0">LUX-{st.idDress}</p>
                                                         </td>
-                                                        <td className="align-middle text-center text-sm">
-                                                            <span className="badge badge-sm bg-gradient-success">{st.itemStatus.nameStatus}</span>
+                                                        <td>
+                                                            <p className="text-xs text-center font-weight-bold mb-0">{st.nameDress}</p>
+                                                        </td>
+                                                        {
+                                                            st.itemStatus.idStatus == 1 ?
+                                                                <td className="align-middle text-center text-sm">
+                                                                    <span className="badge badge-sm bg-gradient-success">{st.itemStatus.nameStatus}</span>
+                                                                </td> : st.itemStatus.idStatus == 2 ?
+                                                                    <td className="align-middle text-center text-sm">
+                                                                        <span className="badge badge-sm bg-gradient-information">{st.itemStatus.nameStatus}</span>
+                                                                    </td> : st.itemStatus.idStatus == 3 ?
+                                                                        <td className="align-middle text-center text-sm">
+                                                                            <span className="badge badge-sm bg-gradient-secondary">{st.itemStatus.nameStatus}</span>
+                                                                        </td> :
+                                                                        <td className="align-middle text-center text-sm">
+                                                                            <span className="badge badge-sm bg-gradient-warning">{st.itemStatus.nameStatus}</span>
+                                                                        </td>
+                                                        }
+                                                        <td className="align-middle text-center">
+                                                            <a href="javascript:;" onClick={() => handleGetDress(st.idDress)} className="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                                                                <i class="fa-solid fa-circle-info" style={{ fontSize: '20px', color: '#866ec7' }}></i>
+                                                            </a>
                                                         </td>
                                                         <td className="align-middle text-center">
-                                                            <span className="text-secondary text-xs font-weight-bold">{moment("2023/04/18").format('DD/MM/YYYY')}</span>
-                                                        </td>
-                                                        <td className="align-middle text-center">
-                                                            <span className="text-secondary text-xs font-weight-bold">{moment("2023/04/18").format('DD/MM/YYYY')}</span>
-                                                        </td>
-                                                        <td className="align-middle">
-                                                            <a href="javascript:;" className="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                                                                Chỉnh sửa
+                                                            <a href="javascript:;" onClick={() => { }} className="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                                                                <i class="fa-solid fa-pen-to-square" style={{ fontSize: '20px', color: '#866ec7' }}></i>
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -223,6 +272,48 @@ export default function ListStandard() {
                         </div>
                         : ""}
                 </div>
+                {isOpen && dress != null &&
+                    <div className="modal">
+                        <div className="modal_overlay_details">
+                        </div>
+                        <div className="modal_body_details">
+                            <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                                <div className="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                                    <h6 className="text-white text-capitalize font-weight-bolder ps-3" style={{ textAlign: 'center' }}>Chi tiết váy {dress.nameDress} </h6>
+                                </div>
+                            </div>
+                            <div className="modal_inner_details">
+                                <div className="container">
+                                    <div className="images">
+                                        <img src={dress.image} />
+                                    </div>
+
+                                    <div className="product">
+                                        <p>Luxury Dress</p>
+                                        <p>{dress.information}</p>
+                                        <p>Trạng thái: {dress.itemStatus.nameStatus}</p>
+                                        {
+                                            listDressRented.length != 0 &&
+                                            listDressRented.map((ren, index) => {
+                                                return (
+                                                    <>
+                                                        <p key={index}>Ngày thuê: {moment(ren.contract.startDate).format('DD/MM/YYYY')} </p>
+                                                        <p>Khách hàng: {ren.contract.customer.nameCustomer}</p>
+                                                    </>
+                                                )
+                                            })
+                                        }
+                                        <p>Số lần bảo trì: {dress.maintenanceTimes} </p>
+                                        <div className="buttons">
+                                            <button className="add" onClick={() => closeModal()}>Trở về</button>
+                                            <button className="like"><span>♥</span></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     )

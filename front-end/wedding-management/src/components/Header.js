@@ -19,7 +19,7 @@ export default function Header() {
     localStorage.removeItem("role");
     setUsername('');
     setUser('');
-    navigate('/');
+    navigate('/login');
   }
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function Header() {
     const employee = localStorage.getItem("nameUser");
     if (data && employee) {
       getUserName(data, employee);
-    }
+    } 
   }, [location]);
 
 
@@ -58,12 +58,12 @@ export default function Header() {
             </li>
             <li className="nav-item px-3 d-flex align-items-center">
               <a href="javascript:" className="nav-link text-body p-0">
-                <i className="fa fa-cog fixed-plugin-button-nav cursor-pointer" style={{ color: 'white' }} />
+                {/* <i className="fa fa-cog fixed-plugin-button-nav cursor-pointer" style={{ color: 'white' }} /> */}
               </a>
             </li>
             <li className="nav-item dropdown pe-2 d-flex align-items-center">
               <a href="javascript:" className="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                <i className="fa fa-bell cursor-pointer" style={{ color: 'white' }} />
+                {/* <i className="fa fa-bell cursor-pointer" style={{ color: 'white' }} /> */}
               </a>
               <ul className="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
                 <li className="mb-2">
@@ -123,17 +123,17 @@ export default function Header() {
             {username == '' ?
               <li className="nav-item d-flex align-items-center">
                 <Link to={`/login`} className="nav-link text-body font-weight-bold px-2" style={{ color: 'white' }}>
-                  <i className="fa-solid fa-right-to-bracket" style={{ color: 'white' }} />
+                  <i className="fa-solid fa-right-to-bracket" style={{ color: 'white' }} />&nbsp;
                   <span className="d-sm-inline d-none" style={{ color: 'white' }}>Đăng nhập</span>
                 </Link>
               </li> :
               <li className="nav-item d-flex align-items-center">
                 <b className="px-1" style={{ color: 'white' }}>Xin chào {user}</b>
                 <a onClick={() => {
-                 handleLogout()
-                  
+                  handleLogout()
+
                 }} className="nav-link text-body font-weight-bold px-0" style={{ color: 'white' }}>
-                  <i className="fa-solid fa-power-off" style={{ color: 'white' }} />
+                  <i className="fa-solid fa-power-off" style={{ color: 'white' }} />&nbsp;
                   <span className="d-sm-inline d-none" style={{ color: 'white' }}>Đăng xuất</span>
                 </a>
               </li>

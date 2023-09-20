@@ -27,14 +27,30 @@ public interface IDressRepository extends JpaRepository<Dress, Long> {
 
     @Modifying
     @Query(nativeQuery = true,
-            value = "select d.id_dress as idDress, d.name_dress as nameDress " +
-                    "from dress d " +
-                    "left join contract_detail cd on d.id_dress = cd.id_dress " +
-                    "left join contract c on c.id_contract = cd.id_contract " +
-                    "join type_dress td on td.id_type_dress = d.id_type_dress " +
-                    "where d.id_status = 1 and td.name_type_dress = :name " +
-                    "or d.id_status = 2 and ((:date <= date_sub(c.start_date, interval 10 day)) or (:date >= date_add(c.end_date, interval 7 day ))) and td.name_type_dress = :name " +
-                    "group by d.id_dress")
-    List<IDressProjection> getDressRented(@Param("name") String name , @Param("date") String date);
+            value = "select d.id_dress as idDress, d.name_dress as nameDress\n" +
+                    "from dress d\n" +
+                    "         join type_dress td on td.id_type_dress = d.id_type_dress\n" +
+                    "where d.id_status = 1 and td.name_type_dress = :name\n" +
+                    "   or d.id_status = 2 and d.id_dress in (\n" +
+                    "    select distinct cd.id_dress\n" +
+                    "    from contract_detail cd\n" +
+                    "             join contract c\n" +
+                    "                  on c.id_contract = cd.id_contract\n" +
+                    "    where ((:date <= date_sub(c.start_date, interval 10 day)) or (:date >= date_add(c.end_date, interval 7 day )))\n" +
+                    "      and c.status_contract = false and c.cancel_contract = false\n" +
+                    "      and cd.id_dress not in (\n" +
+                    "        select cd.id_dress\n" +
+                    "        from contract_detail cd\n" +
+                    "                 join contract c\n" +
+                    "                      on c.id_contract = cd.id_contract\n" +
+                    "        where ((:date <= date_sub(c.start_date, interval 10 day)) or (:date >= date_add(c.end_date, interval 7 day )))\n" +
+                    "    )\n" +
+                    ");")
+    List<IDressProjection> getDressRented(@Param("name") String name, @Param("date") String date);
 
+    List<Dress> getAllByTypeDress_NameTypeDressAndItemStatus_IdStatus(String nameType, Long idStatus);
+
+    List<Dress> getDressByDateMaintenanceIsNotNullAndFlagDeleteIsFalse();
+
+    List<Dress> getDressByDateMaintenanceIsNotNullAndFlagDeleteIsFalseAndItemStatus_IdStatus(Long id);
 }

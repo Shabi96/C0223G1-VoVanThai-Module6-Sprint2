@@ -1,12 +1,16 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import * as yup from 'yup';
 import { createCustomer } from "../services/CustomerService";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function CreateCustomer() {
     const navigate = useNavigate();
+    const params = useParams();
+    useEffect(() => {
+        document.title = 'Thêm Mới Khách hàng!!!!'
+    },[])
     return (
         <main className="main-content mt-0" style={{
             backgroundImage: 'url("https://icdn.dantri.com.vn/zoom/1200_630/2022/07/14/wedding-fair-pr2docx-1657782815565.jpeg")',
@@ -27,29 +31,30 @@ export default function CreateCustomer() {
                                     <Formik initialValues={{
                                         idCustomer: '',
                                         nameCustomer: '',
-                                        phone: '',
+                                        phone: params.phone,
                                         email: '',
                                         flagDelete: '',
                                         address: ''
                                     }}
                                         validationSchema={yup.object({
-                                            nameCustomer: yup.string().required(),
-                                            phone: yup.string().required(),
-                                            email: yup.string().required(),
-                                            address: yup.string().required()
+                                            nameCustomer: yup.string().min(3, "Họ và tên tối thiểu 3 ký tự.").max(100, "Họ và tên tối đa 100 ký tự. ").required("Vui lòng nhập họ và tên."),
+                                            phone: yup.string().matches(/^(\+84|0)[1-9][0-9]{8}$/, "Không chứa các kí tự đặc biệt").required("Vui lòng nhập số điện thoại."),
+                                            email: yup.string().email().required("Địa chỉ email theo định dạng xxx@xxx.xxx"),
+                                            address: yup.string().min(10, "Địa chỉ tối thiểu 10 kí tự.").max(100, "Địa chỉ tối đa chỉ 100 kí tự.").required("Vui lòng nhập địa chỉ.")
                                         })}
                                         onSubmit={async (values) => {
                                             console.log(values);
+                                            localStorage.setItem('phoneCreate', values.phone);
                                             try {
                                                 await createCustomer(values).then(() => {
-                                                Swal.fire({
-                                                    icon: 'success',
-                                                    title: 'Thêm mới thành công!!!!',
-                                                    showConfirmButton: false,
-                                                    timer: 1500
+                                                    Swal.fire({
+                                                        icon: 'success',
+                                                        title: 'Thêm mới thành công!!!!',
+                                                        showConfirmButton: false,
+                                                        timer: 1500
+                                                    })
+                                                    navigate("/create-contract")
                                                 })
-                                                navigate("/create-contract");
-                                            })
                                             } catch (error) {
                                                 Swal.fire({
                                                     icon: 'warning',
@@ -59,7 +64,7 @@ export default function CreateCustomer() {
                                                 })
                                                 return
                                             }
-                                            
+
                                         }}>
                                         <Form>
                                             <div className=" input-group input-group-outline my-3">

@@ -11,13 +11,16 @@ public class Combo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idCombo;
     private String nameCombo;
+    private Double priceCombo;
 
     public Combo() {
     }
 
-    public Combo(Long idCombo, String nameCombo) {
+
+    public Combo(Long idCombo, String nameCombo, Double priceCombo) {
         this.idCombo = idCombo;
         this.nameCombo = nameCombo;
+        this.priceCombo = priceCombo;
     }
 
     public void setIdCombo(Long idCombo) {
@@ -34,5 +37,13 @@ public class Combo {
 
     public void setNameCombo(String nameCombo) {
         this.nameCombo = nameCombo;
+    }
+
+    public Double getPriceCombo() {
+        return priceCombo;
+    }
+
+    public void setPriceCombo(Double priceCombo) {
+        this.priceCombo = priceCombo;
     }
 }

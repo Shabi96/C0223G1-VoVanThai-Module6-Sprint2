@@ -22,12 +22,29 @@ public interface IVestRepository extends JpaRepository<Vest, Long> {
     @Modifying
     @Transactional
     @Query(nativeQuery = true, value =
-            "select v.id_vest as idVest, v.name_vest as nameVest \n" +
+            "select v.id_vest as idVest, v.name_vest as nameVest\n" +
                     "from vest v\n" +
-                    "left join contract_detail cd on v.id_vest = cd.id_vest\n" +
-                    "left join contract c on c.id_contract = cd.id_contract\n" +
                     "where v.id_status = 1\n" +
-                    "or (v.id_status = 2 and (:date <= date_sub(c.start_date, interval 10 day) or :date >= date_add(c.end_date, interval 7 day ))) " +
-                    "group by v.id_vest ")
+                    "   or v.id_status = 2 and v.id_vest in (\n" +
+                    "    select distinct cd.id_vest\n" +
+                    "    from contract_detail cd\n" +
+                    "             join contract c\n" +
+                    "                  on c.id_contract = cd.id_contract\n" +
+                    "    where ((:date <= date_sub(c.start_date, interval 10 day)) or (:date >= date_add(c.end_date, interval 7 day )))\n" +
+                    "      and c.status_contract = false and c.cancel_contract = false\n" +
+                    "      and cd.id_vest not in (\n" +
+                    "        select cd.id_vest\n" +
+                    "        from contract_detail cd\n" +
+                    "                 join contract c\n" +
+                    "                      on c.id_contract = cd.id_contract\n" +
+                    "        where ((:date <= date_sub(c.start_date, interval 10 day)) or (:date >= date_add(c.end_date, interval 7 day )))\n" +
+                    "    )\n" +
+                    ");")
     List<IVestProjection> getVestRented(@Param("date") String date);
+
+    List<Vest> getAllByItemStatus_IdStatus(Long id);
+
+    List<Vest> getVestByDateMaintenanceIsNotNullAndFlagDeleteIsFalse();
+    List<Vest> getVestByDateMaintenanceIsNotNullAndFlagDeleteIsFalseAndItemStatus_IdStatus(Long id);
+
 }

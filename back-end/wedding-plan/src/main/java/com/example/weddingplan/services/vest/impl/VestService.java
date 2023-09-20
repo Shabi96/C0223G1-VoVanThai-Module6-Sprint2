@@ -35,4 +35,24 @@ public class VestService implements IVestService {
     public List<IVestProjection> getVestRented(String date) {
         return vestRepository.getVestRented(date);
     }
+
+    @Override
+    public void addNewVest(Vest vest) {
+        vestRepository.save(vest);
+    }
+
+    @Override
+    public List<Vest> getVestByDateMaintenanceIsNotNullAndFlagDeleteIsFalse() {
+        return vestRepository.getVestByDateMaintenanceIsNotNullAndFlagDeleteIsFalse();
+    }
+
+    @Override
+    public List<Vest> getVestByDateMaintenanceIsNotNullAndFlagDeleteIsFalseAndItemStatus_IdStatus(Long id) {
+        return vestRepository.getVestByDateMaintenanceIsNotNullAndFlagDeleteIsFalseAndItemStatus_IdStatus(id);
+    }
+
+    @Override
+    public List<Vest> getAllByItemStatus_IdStatus(Long id) {
+        return vestRepository.getAllByItemStatus_IdStatus(id);
+    }
 }

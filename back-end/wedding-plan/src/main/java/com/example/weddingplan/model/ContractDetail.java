@@ -7,7 +7,6 @@ public class ContractDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idContractDetail;
-    private Double deposit;
     @OneToOne
     @JoinColumn(name = "id_dress")
     private Dress dress;
@@ -23,9 +22,8 @@ public class ContractDetail {
     public ContractDetail() {
     }
 
-    public ContractDetail(Long idContractDetail, Double deposit, Dress dress, Vest vest, Contract contract) {
+    public ContractDetail(Long idContractDetail, Dress dress, Vest vest, Contract contract) {
         this.idContractDetail = idContractDetail;
-        this.deposit = deposit;
         this.dress = dress;
         this.vest = vest;
         this.contract = contract;
@@ -37,14 +35,6 @@ public class ContractDetail {
 
     public Long getIdContractDetail() {
         return idContractDetail;
-    }
-
-    public Double getDeposit() {
-        return deposit;
-    }
-
-    public void setDeposit(Double deposit) {
-        this.deposit = deposit;
     }
 
     public Dress getDress() {

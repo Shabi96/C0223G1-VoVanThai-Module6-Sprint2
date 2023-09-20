@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:400,700');
+/* font: 'Lato', sans-serif;
+
+/* center container in the middle */
+
+
+.modal_inner_details body {
+  display: grid;
+  font-family: font, sans-serif;
+  text-transform: uppercase;
+  grid-template-rows: auto 1fr;
+}
+
+.modal_inner_details .container {
+  position: relative;
+  margin-bottom: 20px;
+  overflow: hidden;
+  min-width: 520px;
+  min-height: 400px;
+  box-shadow: 5px 5px 15px rgba(#BA7E7E, .5);
+  border-radius: 10px;
+}
+
+.modal_inner_details p {
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: #BA7E7E;
+  letter-spacing: 1px;
+}
+
+.modal_inner_details h1 {
+  font-size: 1.2em;
+  color: #4E4E4E;
+  margin-top: -5px;
+}
+
+.modal_inner_details h2 {
+  color: #C3A1A0;
+  margin-top: -5px;
+}
+
+.modal_inner_details img {
+  width: 270px;
+  min-height: 400px;
+  margin-top: 10px;
+}
+
+.modal_inner_details .slideshow-buttons {
+  top: 70%;
+  display: none;
+}
+
+.modal_inner_details .one, .two, .three, .four {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #E0C9CB;
+}
+
+.modal_inner_details .one {
+  left: 22%;
+}
+.modal_inner_details .two {
+  left: 27%;
+}
+.modal_inner_details .three {
+  left: 32%;
+}
+.modal_inner_details .four {
+  left: 37%;
+}
+
+.modal_inner_details .product {
+  position: absolute;
+  width: 40%;
+  height: 100%;
+  top: 3%;
+  left: 55%;
+}
+
+.modal_inner_details .desc {
+  text-transform: none;
+  letter-spacing: 0;
+  margin-bottom: 17px;
+  color: #4E4E4E;
+  font-size: .7em;
+  line-height: 1.6em;
+  margin-right: 25px;
+  text-align: justify;
+}
+
+.modal_inner_details .buttons button {
+  background: #BA7E7E;
+  padding: 10px;
+  display: inline-block;
+  outline: 0;
+  border: 0;
+  margin: -1px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #F5F5F5;
+  cursor: pointer;
+  align-self: flex-end;
+  /* :hover {
+    background:rose;
+    transition: all .4s ease-in-out;
+  } */
+}
+.modal_inner_details .buttons button:hover {
+    background:#BA7E7E;
+    transition: all .4s ease-in-out;
+}
+
+.modal_inner_details .add {
+  width: 67%;
+}
+
+.modal_inner_details .like {
+  width: 22%;
+}
+
+.modal_inner_details .sizes {
+  display: grid;
+  color: #D9AAB7;
+  grid-template-columns: repeat(auto-fill, 30px);
+  width: 60%;
+  grid-gap: 4px;
+  margin-left: 20px;
+  margin-top: 5px;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.modal_inner_details .pick {
+  margin-top: 11px;
+  margin-bottom:0;
+  margin-left: 20px;
+}
+
+.modal_inner_details .size {
+  padding: 9px;
+  border: 1px solid #E0C9CB;
+  font-size: 0.7em;
+  text-align: center;
+ 
+}
+.modal_inner_details .size:hover {
+    background: #BA7E7E;
+    color: #F5F5F5;
+    transition: all .4s ease-in-out;
+}
+
+.modal_inner_details .focus{
+  background: #BA7E7E;
+  color: #F5F5F5;
+}
+
+/* footer {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  padding: 10px;
+  p {
+    letter-spacing: 3px;
+  }
+  a {
+    color: #ffffff;
+    text-decoration: none;
+    &:hover {
+      color: #7d7d7d;
+    }
+  }
+} */

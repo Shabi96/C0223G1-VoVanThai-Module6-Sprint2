@@ -4,6 +4,7 @@ import com.example.weddingplan.model.Dress;
 import com.example.weddingplan.projection.IDressProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -18,5 +19,8 @@ public interface IDressService {
     List<IDressProjection> getDressRented(String name, String date);
 
     void addNewDress(Dress dress);
+    List<Dress> getDressByDateMaintenanceIsNotNullAndFlagDeleteIsFalse();
+    List<Dress> getDressByDateMaintenanceIsNotNullAndFlagDeleteIsFalseAndItemStatus_IdStatus(Long id);
+    List<Dress> getDressReady(String nameType, Long idStatus);
 
 }

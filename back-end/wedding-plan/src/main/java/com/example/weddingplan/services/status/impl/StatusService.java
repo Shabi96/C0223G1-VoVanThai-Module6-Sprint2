@@ -17,4 +17,9 @@ public class StatusService implements IStatusService {
     public List<ItemStatus> getAll() {
         return statusRepository.findAll();
     }
+
+    @Override
+    public ItemStatus getById(Long id) {
+        return statusRepository.findById(id).orElse(null);
+    }
 }

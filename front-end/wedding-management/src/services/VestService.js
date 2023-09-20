@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export async function getAllVest(page, nameVest, nameStatus) {
-    const res = await axios.get(`http://localhost:8080/vest/list?page=${page}&&nameVest=${nameVest}&&nameStatus=${nameStatus}`);
+export async function getAllVest(page, nameVest, nameStatus, headers) {
+    const res = await axios.get(`http://localhost:8080/vest/list?page=${page}&&nameVest=${nameVest}&&nameStatus=${nameStatus}`, { headers });
     return res.data;
 }
 

@@ -14,6 +14,9 @@ public class ContractDTO {
     private Double deposit;
     private Dress dress;
     private Vest vest;
+    private Dress dress1;
+    private Vest vest1;
+    private Double totalPrice;
 
     public ContractDTO() {
     }
@@ -27,6 +30,33 @@ public class ContractDTO {
         this.deposit = deposit;
         this.dress = dress;
         this.vest = vest;
+    }
+
+    public ContractDTO(String startDate, String endDate, Combo combo, Customer customer, Employee employee, Double deposit, Dress dress, Vest vest, Dress dress1, Vest vest1) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.combo = combo;
+        this.customer = customer;
+        this.employee = employee;
+        this.deposit = deposit;
+        this.dress = dress;
+        this.vest = vest;
+        this.dress1 = dress1;
+        this.vest1 = vest1;
+    }
+
+    public ContractDTO(String startDate, String endDate, Combo combo, Customer customer, Employee employee, Double deposit, Dress dress, Vest vest, Dress dress1, Vest vest1, Double totalPrice) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.combo = combo;
+        this.customer = customer;
+        this.employee = employee;
+        this.deposit = deposit;
+        this.dress = dress;
+        this.vest = vest;
+        this.dress1 = dress1;
+        this.vest1 = vest1;
+        this.totalPrice = totalPrice;
     }
 
     public String getStartDate() {
@@ -91,5 +121,29 @@ public class ContractDTO {
 
     public void setVest(Vest vest) {
         this.vest = vest;
+    }
+
+    public Dress getDress1() {
+        return dress1;
+    }
+
+    public void setDress1(Dress dress1) {
+        this.dress1 = dress1;
+    }
+
+    public Vest getVest1() {
+        return vest1;
+    }
+
+    public void setVest1(Vest vest1) {
+        this.vest1 = vest1;
+    }
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

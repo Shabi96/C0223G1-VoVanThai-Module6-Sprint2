@@ -49,4 +49,20 @@ public class DressService implements IDressService {
     public void addNewDress(Dress dress) {
         dressRepository.save(dress);
     }
+
+    @Override
+    public List<Dress> getDressByDateMaintenanceIsNotNullAndFlagDeleteIsFalse() {
+        return dressRepository.getDressByDateMaintenanceIsNotNullAndFlagDeleteIsFalse();
+    }
+
+    @Override
+    public List<Dress> getDressByDateMaintenanceIsNotNullAndFlagDeleteIsFalseAndItemStatus_IdStatus(Long id) {
+        return dressRepository.getDressByDateMaintenanceIsNotNullAndFlagDeleteIsFalseAndItemStatus_IdStatus(id);
+    }
+
+    @Override
+    public List<Dress> getDressReady(String nameType, Long idStatus) {
+        return dressRepository.getAllByTypeDress_NameTypeDressAndItemStatus_IdStatus(nameType, idStatus);
+    }
+
 }
