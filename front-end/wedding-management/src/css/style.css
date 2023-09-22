@@ -12091,10 +12091,14 @@ a[data-toggle="collapse"] {
     background-color: rgba(26, 25, 25, 0.21);
 
 }
-
+.infoText{
+    white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
 .modal_body {
     width: 600px;
-    height: 400px;
+    min-height: 200px;
     background-color: white;
     margin: auto;
     border-radius: 5px;
@@ -12329,6 +12333,9 @@ a[data-toggle="collapse"] {
     border: none;
     width: 100%;
     border-radius: 4px;
+}
+.modal_inner .space-around {
+    justify-content: space-around;
 }
 
 .modal_inner h1 {

@@ -8,6 +8,15 @@ import { useNavigate, useParams } from "react-router-dom";
 export default function CreateCustomer() {
     const navigate = useNavigate();
     const params = useParams();
+    const headers = {
+        "Authorization": 'Bearer ' + localStorage.getItem('token')
+    }
+    useEffect(() => {
+        let tokenLogin = localStorage.getItem("token");
+        if (tokenLogin == null) {
+            navigate('/404')
+        }
+    }, [])
     useEffect(() => {
         document.title = 'Thêm Mới Khách hàng!!!!'
     },[])
@@ -46,7 +55,7 @@ export default function CreateCustomer() {
                                             console.log(values);
                                             localStorage.setItem('phoneCreate', values.phone);
                                             try {
-                                                await createCustomer(values).then(() => {
+                                                await createCustomer(values, headers).then(() => {
                                                     Swal.fire({
                                                         icon: 'success',
                                                         title: 'Thêm mới thành công!!!!',

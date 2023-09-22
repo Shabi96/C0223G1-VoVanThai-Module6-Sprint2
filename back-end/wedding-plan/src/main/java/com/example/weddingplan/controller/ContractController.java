@@ -83,27 +83,34 @@ public class ContractController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("/cancel/{id}")
     public ResponseEntity<?> cancelContract(@PathVariable Long id) {
         Contract contract = contractService.getContractsById(id);
         if (contract == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        contract.setCancelContract(true);
-        List<ContractDetail> contractDetailList = contractDetailService.getContractDetailByContract_IdContract(contract.getIdContract());
-        for (ContractDetail c: contractDetailList) {
-            if (contractDetailService.getContractDetailByDress_IdDressAndContract_CancelContractIsFalseAndContract_StatusContractIsFalse(c.getDress().getIdDress()).size() == 1) {
-                c.getDress().setItemStatus(statusService.getById(1L));
+        LocalDate localDate = LocalDate.now();
+        if (LocalDate.parse(contract.getStartDate()).isAfter(localDate) || LocalDate.parse(contract.getStartDate()).isEqual(localDate)) {
+            contract.setCancelContract(true);
+            List<ContractDetail> contractDetailList = contractDetailService.getContractDetailByContract_IdContract(contract.getIdContract());
+            for (ContractDetail c: contractDetailList) {
+                if (contractDetailService.getContractDetailByDress_IdDressAndContract_CancelContractIsFalseAndContract_StatusContractIsFalse(c.getDress().getIdDress()).size() == 1) {
+                    c.getDress().setItemStatus(statusService.getById(1L));
+                }
+                if (contractDetailService.getContractDetailByVest_IdVestAndContract_CancelContractIsFalseAndContract_StatusContractIsFalse(c.getVest().getIdVest()).size() == 1) {
+                    c.getVest().setItemStatus(statusService.getById(1L));
+                }
+                contractDetailService.createContractDetail(c);
             }
-            if (contractDetailService.getContractDetailByVest_IdVestAndContract_CancelContractIsFalseAndContract_StatusContractIsFalse(c.getVest().getIdVest()).size() == 1) {
-                c.getVest().setItemStatus(statusService.getById(1L));
-            }
-            contractDetailService.createContractDetail(c);
+            contractService.createContract(contract);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
-        contractService.createContract(contract);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/list-details/{idDress}")
     public ResponseEntity<?> getContractDetailsByIdDress(@PathVariable Long idDress) {
         List<ContractDetail> contractDetailList = contractDetailService.getContractDetailsByIdDress(idDress);
@@ -113,6 +120,7 @@ public class ContractController {
         return new ResponseEntity<>(contractDetailList, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/list-details-vest/{idVest}")
     public ResponseEntity<?> getContractDetailsByIdVest(@PathVariable Long idVest) {
         List<ContractDetail> contractDetailList = contractDetailService.getContractDetailsByIdVest(idVest);
@@ -121,7 +129,7 @@ public class ContractController {
         }
         return new ResponseEntity<>(contractDetailList, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<?> getContractById(@PathVariable Long id) {
         if (contractService.getContractsById(id) == null) {
@@ -130,6 +138,7 @@ public class ContractController {
         return new ResponseEntity<>(contractService.getContractsById(id), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/details/{id}")
     public ResponseEntity<?> getContractDetailByIdContract(@PathVariable Long id) {
         if (contractDetailService.getContractDetailByContract_IdContract(id).isEmpty()) {
@@ -138,6 +147,7 @@ public class ContractController {
         return new ResponseEntity<>(contractDetailService.getContractDetailByContract_IdContract(id), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("/{id}/{money}")
     public ResponseEntity<?> endContract(@PathVariable Long id, @PathVariable String money) {
         if (contractService.getContractsById(id) == null) {
@@ -148,10 +158,10 @@ public class ContractController {
             Contract contract = contractService.getContractsById(id);
             if (remainMoney == (contract.getTotalPrice() - contract.getDeposit())) {
                 for (ContractDetail dt : contractDetailService.getContractDetailByContract_IdContract(id)) {
-                    if(contractDetailService.getContractDetailByDress_IdDressAndContract_CancelContractIsFalseAndContract_StatusContractIsFalse(dt.getDress().getIdDress()).size() <= 1) {
+                    if(contractDetailService.getContractDetailByDress_IdDressAndContract_CancelContractIsFalseAndContract_StatusContractIsFalse(dt.getDress().getIdDress()).size() == 1) {
                         dt.getDress().setItemStatus(statusService.getById(3L));
                     }
-                    if (contractDetailService.getContractDetailByVest_IdVestAndContract_CancelContractIsFalseAndContract_StatusContractIsFalse(dt.getVest().getIdVest()).size() <= 1) {
+                    if (contractDetailService.getContractDetailByVest_IdVestAndContract_CancelContractIsFalseAndContract_StatusContractIsFalse(dt.getVest().getIdVest()).size() == 1) {
                         dt.getVest().setItemStatus(statusService.getById(3L));
                     }
                     dt.getDress().setDateMaintenance(LocalDate.now().toString());
@@ -190,6 +200,7 @@ public class ContractController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("")
     public ResponseEntity<?> addNewContract(@RequestBody ContractDTO contractDTO) {
         if (contractDTO.getVest1() == null) {
@@ -209,6 +220,7 @@ public class ContractController {
             contractDetail.setContract(contract);
             contractDetail.setDress(contractDTO.getDress());
             contractDetail.setVest(contractDTO.getVest());
+            contractDetail.setWeddingDate(LocalDate.parse(contract.getStartDate()).plusDays(1).toString());
             contractDetailService.createContractDetail(contractDetail);
             contractDTO.getDress().getItemStatus().setIdStatus(2L);
             dressService.addNewDress(contractDTO.getDress());
@@ -232,6 +244,7 @@ public class ContractController {
             contractDetail.setContract(contract);
             contractDetail.setDress(contractDTO.getDress());
             contractDetail.setVest(contractDTO.getVest());
+            contractDetail.setWeddingDate(LocalDate.parse(contract.getStartDate()).plusDays(1).toString());
             contractDetailService.createContractDetail(contractDetail);
             contractDTO.getDress().getItemStatus().setIdStatus(2L);
             dressService.addNewDress(contractDTO.getDress());
@@ -241,6 +254,7 @@ public class ContractController {
             contractDetail2.setContract(contract);
             contractDetail2.setVest(contractDTO.getVest1());
             contractDetail2.setDress(contractDTO.getDress1());
+            contractDetail2.setWeddingDate(LocalDate.parse(contract.getStartDate()).plusDays(2).toString());
             contractDetailService.createContractDetail(contractDetail2);
             contractDTO.getVest1().getItemStatus().setIdStatus(2L);
             vestService.addNewVest(contractDTO.getVest1());

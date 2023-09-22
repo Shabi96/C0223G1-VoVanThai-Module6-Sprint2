@@ -43,7 +43,6 @@ root.render(
             <Route path='/return-payment' element={<Payment />}></Route>
             <Route path='/404' element={<Anime404 />}></Route>
           </Routes>
-
         </div>
         <Footer />
       </div>

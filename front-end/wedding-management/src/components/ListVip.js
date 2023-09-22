@@ -3,6 +3,7 @@ import moment from 'moment';
 import { getAllStatus, getDressById, getListDress } from "../services/DressService";
 import Swal from "sweetalert2";
 import { getContractDetailsByIdDress } from "../services/ContractDetailService";
+import { useNavigate } from "react-router-dom";
 
 export default function ListStandard() {
     const [vips, setVips] = useState([]);
@@ -14,11 +15,18 @@ export default function ListStandard() {
     const [isOpen, setIsOpen] = useState(true);
     const [dress, setDress] = useState(null);
     const [listDressRented, setListDressRented] = useState([]);
+    const navigate = useNavigate();
+
 
     const headers = {
         "Authorization": 'Bearer ' + localStorage.getItem('token')
     }
-
+    useEffect(() => {
+        let tokenLogin = localStorage.getItem("token");
+        if (tokenLogin == null) {
+            navigate('/404')
+        }
+    }, [])
     const openModal = async () => {
         setIsOpen(true);
     };
@@ -29,10 +37,10 @@ export default function ListStandard() {
 
     const handleGetDress = async (id) => {
         try {
-            const data = await getDressById(id);
+            const data = await getDressById(id, headers);
             if (data.itemStatus.idStatus == 2) {
                 try {
-                    setListDressRented(await getContractDetailsByIdDress(id));
+                    setListDressRented(await getContractDetailsByIdDress(id, headers));
                 } catch (error) {
                     console.log("Không có ngày thuê");
                 }
@@ -62,7 +70,7 @@ export default function ListStandard() {
 
     const getStatus = async () => {
         try {
-            const data = await getAllStatus();
+            const data = await getAllStatus(headers);
             setStatusList(data);
         } catch (error) {
             console.log("Không có dữ liệu");
@@ -159,7 +167,7 @@ export default function ListStandard() {
                                             <th className="text-uppercase text-center text-xxs font-weight-bolder opacity-7 ps-2">Tên váy</th>
                                             <th className="text-center text-uppercase text-xxs font-weight-bolder opacity-7">Trạng thái</th>
                                             <th className="text-center text-uppercase text-xxs font-weight-bolder opacity-7">Hành động</th>
-                                            <th className="text-secondary opacity-7" />
+                                            {/* <th className="text-secondary opacity-7" /> */}
                                         </tr>
                                     </thead>
                                     {vips.length != 0 ?
@@ -197,11 +205,11 @@ export default function ListStandard() {
                                                                 <i class="fa-solid fa-circle-info" style={{ fontSize: '20px', color: '#866ec7' }}></i>
                                                             </a>
                                                         </td>
-                                                        <td className="align-middle text-center">
+                                                        {/* <td className="align-middle text-center">
                                                             <a href="javascript:;" onClick={() => { }} className="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
                                                                 <i class="fa-solid fa-pen-to-square" style={{ fontSize: '20px', color: '#866ec7' }}></i>
                                                             </a>
-                                                        </td>
+                                                        </td> */}
                                                     </tr>
                                                 )
                                             })}
@@ -300,7 +308,7 @@ export default function ListStandard() {
                                                 )
                                             })
                                         }
-                                        <p>Số lần bảo trì: {dress.maintenanceTimes} </p>
+                                        <p>Số lần vệ sinh: {dress.maintenanceTimes} </p>
                                         <div className="buttons">
                                             <button className="add" onClick={() => closeModal()}>Trở về</button>
                                             <button className="like"><span>♥</span></button>

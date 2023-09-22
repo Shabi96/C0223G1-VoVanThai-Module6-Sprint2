@@ -8,7 +8,6 @@ import Select from 'react-select';
 import { add } from 'date-fns';
 import { findEmployeeByEmail } from "../services/EmployeeService";
 import { getVestByDate, getVestById } from "../services/VestService";
-import { createNewContract } from "../services/ContractService";
 import { debounce } from 'lodash';
 import { getPayment } from "../services/PaymentService";
 import CurrencyFormat from "./CurrencyFormat";
@@ -48,9 +47,15 @@ export default function CreateContract() {
     const [totalPrice, setTotalPrice] = useState(0);
     const [isOpenPayment, setIsOpenPayment] = useState(false);
     const [inputDe, setInputDe] = useState(0);
-    const [phoneCreate, setPhoneCreate] = useState(null);
+    const [phoneCreate, setPhoneCreate] = useState("");
+    const [depositMoney, setDepositMoney] = useState(2000000);
 
-
+    useEffect(() => {
+        let tokenLogin = localStorage.getItem("token");
+        if (tokenLogin == null) {
+            navigate('/404')
+        }
+    }, [])
     const openModalPayment = () => {
         setIsOpenPayment(true);
     };
@@ -68,20 +73,22 @@ export default function CreateContract() {
         setIsOpen(false);
     };
 
-    const phoneCreateLocal = localStorage.getItem('phoneCreate');
-    localStorage.removeItem('phoneCreate');
-    console.log(phoneCreateLocal);
-    // if (phoneCreateLocal == null) {
-    //     setPhoneCreate('');
-    // } else {
-    //     setPhoneCreate(phoneCreateLocal);
-    //     localStorage.removeItem('phoneCreate');
-    // }
+    const getPhoneCreate = async (phone) => {
+        setPhoneCreate(phone);
+        localStorage.removeItem('phoneCreate');
+    }
+
+    useEffect(() => {
+        const phoneCreateLocal = localStorage.getItem('phoneCreate');
+        if (phoneCreateLocal != null) {
+            getPhoneCreate(phoneCreateLocal);
+        }
+    }, [])
 
     const getUser = async () => {
         const phone = document.getElementById("find-customer").value;
         try {
-            const data = await getCustomerByPhone(phone);
+            const data = await getCustomerByPhone(phone, headers);
             setUser(data);
         } catch (err) {
             Swal.fire({
@@ -111,7 +118,16 @@ export default function CreateContract() {
 
     const getUpgraded = () => {
         console.log(selectedCombo);
-
+        setListDress([]);
+        setListVests([]);
+        setSelectedDress(null);
+        setSelectedVest(null);
+        setSelectedDress2(null);
+        setSelectedVest2(null);
+        setDressImage(null);
+        setVestImage(null);
+        setDressImage2(null);
+        setVestImage2(null);
         if (upgraded) {
             setUpgraded(false);
 
@@ -124,7 +140,7 @@ export default function CreateContract() {
 
     const getCombo = async () => {
         try {
-            const data = await getAllCombo();
+            const data = await getAllCombo(headers);
             setCombo(data);
         } catch (err) {
             Swal.fire({
@@ -150,13 +166,13 @@ export default function CreateContract() {
         setVestImage2(null);
         const inputDate = document.getElementById("find-date").value;
         try {
-            const data = await getAllDress(typeDress, inputDate);
+            const data = await getAllDress(typeDress, inputDate, headers);
             const listSelectDress = data.map((dr) => ({
                 value: dr.idDress,
                 label: dr.nameDress
             }))
             setListDress([...listSelectDress]);
-            const dataVest = await getVestByDate(inputDate);
+            const dataVest = await getVestByDate(inputDate, headers);
             const listSelectVest = dataVest.map((vest) => ({
                 value: vest.idVest,
                 label: vest.nameVest
@@ -172,13 +188,16 @@ export default function CreateContract() {
         }
 
     }
+    const headers = {
+        "Authorization": 'Bearer ' + localStorage.getItem('token')
+    }
 
     const handleChange = async (selectedOption) => {
         setSelectedDress(selectedOption);
         setIdDress(selectedOption?.value);
         setDressImage2(null);
         try {
-            setDressImage(await getDressById(selectedOption?.value));
+            setDressImage(await getDressById(selectedOption?.value, headers));
         } catch (err) {
             console.log("chưa lấy được ảnh!!!!");
             setDressImage(null)
@@ -202,7 +221,7 @@ export default function CreateContract() {
         setSelectedDress2(selectedOption);
         setIdDress2(selectedOption?.value);
         try {
-            setDressImage2(await getDressById(selectedOption?.value));
+            setDressImage2(await getDressById(selectedOption?.value, headers));
         } catch (err) {
             console.log("chưa lấy được ảnh!!!!");
             setDressImage2(null)
@@ -215,7 +234,7 @@ export default function CreateContract() {
         setIdVest(selectedVestRented?.value);
         setVestImage(null);
         try {
-            setVestImage(await getVestById(selectedVestRented?.value));
+            setVestImage(await getVestById(selectedVestRented?.value, headers));
         } catch (err) {
             console.log("chưa lấy được ảnh!!!!");
             setVestImage(null)
@@ -237,7 +256,7 @@ export default function CreateContract() {
         setSelectedVest2(selectedVestRented);
         setIdVest2(selectedVestRented?.value);
         try {
-            setVestImage2(await getVestById(selectedVestRented?.value));
+            setVestImage2(await getVestById(selectedVestRented?.value, headers));
         } catch (err) {
             console.log("chưa lấy được ảnh!!!!");
             setVestImage2(null);
@@ -269,8 +288,6 @@ export default function CreateContract() {
     }
 
     const handleCreateContract1 = async () => {
-        // const data = await getPayment("2000000");
-        // console.log(data);
         console.log("đã vào");
         const inputDate = document.getElementById("find-date").value;
         if (inputDate == '') {
@@ -289,9 +306,9 @@ export default function CreateContract() {
             })
         } else {
             try {
-                const employee = await findEmployeeByEmail(localStorage.getItem("username"));
-                const data = await getDressById(idDress);
-                const vestFind = await getVestById(idVest);
+                const employee = await findEmployeeByEmail(localStorage.getItem("username"), headers);
+                const data = await getDressById(idDress, headers);
+                const vestFind = await getVestById(idVest, headers);
                 let price;
                 if (typeDress == 'STANDARD') {
                     price = combo[0].priceCombo;
@@ -371,26 +388,6 @@ export default function CreateContract() {
                 await getPayment(newContract.deposit).then((res) => {
                     window.location.href = res;
                 });
-
-                // try {
-                //     await createNewContract(newContract).then(() => {
-                //         Swal.fire({
-                //             icon: 'success',
-                //             title: "Thêm mới thành công!!!!",
-                //             showConfirmButton: false,
-                //             timer: 1500
-                //         })
-                //     })
-                //     closeModal();
-                //     navigate("/contract");
-                // } catch (error) {
-                //     Swal.fire({
-                //         icon: 'warning',
-                //         title: "Thêm mới thất bại!!!!",
-                //         showConfirmButton: false,
-                //         timer: 1500
-                //     })
-                // }
             } else {
                 return
             }
@@ -418,42 +415,7 @@ export default function CreateContract() {
             setInputDe(inputDeposit);
             closeModal()
             openModalPayment();
-            // Swal.fire({
-            //     icon: 'question',
-            //     title: 'Bạn có chắc chắn tiến hành làm hợp đồng????',
-            //     showConfirmButton: true,
-            //     showCancelButton: true,
-            //     confirmButtonText: 'Có',
-            //     cancelButtonText: 'Không',
-            //     reverseButtons: true
-            // }).then(async (res) => {
-            //     if (res.isConfirmed) {
-            //         try {
-            //             const newContract = { ...selectContract, deposit: inputDeposit }
-            //             await createNewContract(newContract).then(() => {
-            //                 Swal.fire({
-            //                     icon: 'success',
-            //                     title: "Thêm mới thành công!!!!",
-            //                     showConfirmButton: false,
-            //                     timer: 1500
-            //                 })
-            //             })
-            //             closeModal();
-            //             navigate("/contract");
-            //         } catch (error) {
-            //             Swal.fire({
-            //                 icon: 'warning',
-            //                 title: "Thêm mới thất bại!!!!",
-            //                 showConfirmButton: false,
-            //                 timer: 1500
-            //             })
-            //         }
-            //     } else {
-            //         return
-            //     }
-            // })
         }
-
     }
 
     const handleCreateContract2 = async () => {
@@ -482,11 +444,11 @@ export default function CreateContract() {
             })
         } else {
             try {
-                const employee = await findEmployeeByEmail(localStorage.getItem("username"));
-                const dress1 = await getDressById(idDress);
-                const dress2 = await getDressById(idDress2);
-                const vestFind1 = await getVestById(idVest);
-                const vestFind2 = await getVestById(idVest2);
+                const employee = await findEmployeeByEmail(localStorage.getItem("username"), headers);
+                const dress1 = await getDressById(idDress, headers);
+                const dress2 = await getDressById(idDress2, headers);
+                const vestFind1 = await getVestById(idVest, headers);
+                const vestFind2 = await getVestById(idVest2, headers);
                 let price;
                 if (typeDress == 'STANDARD') {
                     price = combo[1].priceCombo;
@@ -672,8 +634,12 @@ export default function CreateContract() {
                                                             <input id="return-date" readOnly style={{ width: '50%' }} value={returnDate} type="date" className="form-control" />
                                                         </div>
                                                     }
-                                                    <div className="text-center">
-                                                        <button type="button" onClick={() => handleCreateContract1()} className="btn bg-gradient-primary font-weight-bold w-100 my-4 mb-2" style={{ color: 'white' }}>Thêm mới</button>
+                                                    <div className="row text-center">
+                                                        <div className="col-2"></div>
+                                                        <div className="col-8">
+                                                            <button type="button" onClick={() => handleCreateContract1()} className="btn bg-gradient-primary font-weight-bold w-100 my-4 mb-2" style={{ color: 'white' }}>Thêm mới</button>
+                                                        </div>
+                                                        <div className="col-2"></div>
                                                     </div>
                                                 </> : selectedCombo == 2 ?
                                                     <>
@@ -802,8 +768,12 @@ export default function CreateContract() {
                                                                         <input id="return-date" readOnly style={{ width: '50%' }} value={returnDate} type="date" className="form-control" />
                                                                     </div>
                                                                 }
-                                                                <div className="text-center">
-                                                                    <button type="button" onClick={() => handleCreateContract2()} className="btn bg-gradient-primary font-weight-bold w-100 my-4 mb-2" style={{ color: 'white' }}>Thêm mới</button>
+                                                                <div className="row text-center">
+                                                                    <div className="col-2"></div>
+                                                                    <div className="col-8">
+                                                                        <button type="button" onClick={() => handleCreateContract2()} className="btn bg-gradient-primary font-weight-bold w-100 my-4 mb-2" style={{ color: 'white' }}>Thêm mới</button>
+                                                                    </div>
+                                                                    <div className="col-2"></div>
                                                                 </div>
                                                             </>
                                                         }
@@ -812,10 +782,10 @@ export default function CreateContract() {
                                             }
                                         </div>
 
-                                    </> : phoneCreateLocal != null ?
+                                    </> : phoneCreate != "" ?
                                         <div className="card-body">
                                             <div className="input-group input-group-outline my-3">
-                                                <input id="find-customer" value={phoneCreateLocal} onKeyDown={(e) => handleEnter(e)} type="text" placeholder="Nhập số điện thoại khách hàng" className="form-control" />
+                                                <input id="find-customer" value={phoneCreate} onChange={(e) => setPhoneCreate(e.target.value)} onKeyDown={(e) => handleEnter(e)} type="text" placeholder="Nhập số điện thoại khách hàng" className="form-control" />
                                             </div>
                                             <div className="text-center">
                                                 <button type="button" onClick={() => getUser()} className="btn bg-gradient-primary font-weight-bold w-100 my-4 mb-2" style={{ color: 'white' }}>Kiểm tra</button>
@@ -880,8 +850,8 @@ export default function CreateContract() {
                             </div>
                         </div>
                         <div className="modal_inner">
-                            <div className="row">
-                                <div className="col-md-6">
+                            <div className="row space-around">
+                                <div className="col-md-5">
                                     <div className="form-group">
                                         <span className="form-label">Khách hàng: </span>
                                         <input className='form-control'
@@ -889,7 +859,7 @@ export default function CreateContract() {
                                         </input>
                                     </div>
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-5">
                                     <div className="form-group">
                                         <span className="form-label">Combo đã chọn: </span>
                                         <input className='form-control' value={selectedCombo}
@@ -898,15 +868,15 @@ export default function CreateContract() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-md-6">
+                            <div className="row space-around">
+                                <div className="col-md-5">
                                     <div className="form-group">
                                         <span className="form-label">Ngày thuê: </span>
                                         <input value={selectContract.startDate} className="form-control" type="date"
                                             readOnly />
                                     </div>
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-5">
                                     <div className="form-group">
                                         <span className="form-label">Ngày trả: </span>
                                         <input value={selectContract.endDate} className="form-control" type="date"
@@ -914,10 +884,10 @@ export default function CreateContract() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-md-6">
+                            <div className="row space-around">
+                                <div className="col-md-5">
                                     <div className="form-group">
-                                        <span className="form-label">Mã váy: </span>
+                                        <span className="form-label">Váy </span>
                                         <input className="form-control"
                                             value={selectContract.dress.nameDress}
                                             required
@@ -927,9 +897,9 @@ export default function CreateContract() {
                                         <span className="select-arrow" />
                                     </div>
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-5">
                                     <div className="form-group">
-                                        <span className="form-label">Mã Vest</span>
+                                        <span className="form-label">Vest</span>
                                         <input className="form-control"
                                             value={selectContract.vest.nameVest}
                                             required>
@@ -939,20 +909,21 @@ export default function CreateContract() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-md-6">
+                            <div className="row space-around">
+                                <div className="col-md-5">
                                     <div className="form-group">
                                         <span className="form-label">Tiền cọc:  </span>
                                         <input className="form-control"
                                             id='input-deposit'
                                             required
-
+                                            value={depositMoney}
+                                            onChange={(e) => setDepositMoney(e.target.value)}
                                         >
                                         </input>
                                         <span className="select-arrow" />
                                     </div>
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-5">
                                     <div className="form-group">
                                         <span className="form-label">Tổng tiền:  </span>
                                         <p className="form-control"
@@ -967,11 +938,11 @@ export default function CreateContract() {
                                 </div>
                             </div>
                             <div className="form-btn">
-                                <div className="row">
-                                    <div className="col-6">
+                                <div className="row space-around">
+                                    <div className="col-5">
                                         <button className="submit-btn home-btn" onClick={() => { handleCheckDeposit() }}>Xác nhận</button>
                                     </div>
-                                    <div className="col-6">
+                                    <div className="col-5">
                                         <button onClick={() => closeModal()} className="submit-btn back-btn">Trở về
                                         </button>
                                     </div>
@@ -986,11 +957,13 @@ export default function CreateContract() {
                     </div>
                     <div className="modal_body1">
                         <div className="modal_inner">
-                            <div className=''>
-                                <h3 style={{ color: 'white', fontWeight: 'bold', textAlign: 'center', backgroundColor: '#866ec7' }}>Xác nhận hợp đồng {""}</h3>
+                            <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2 mb-2">
+                                <div className="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                                    <h6 className="text-white text-capitalize font-weight-bolder ps-3" style={{ textAlign: 'center' }}>Xác nhận hợp đồng</h6>
+                                </div>
                             </div>
-                            <div className="row">
-                                <div className="col-md-6">
+                            <div className="row space-around">
+                                <div className="col-md-5">
                                     <div className="form-group">
                                         <span className="form-label">Khách hàng: </span>
                                         <input className='form-control'
@@ -998,7 +971,7 @@ export default function CreateContract() {
                                         </input>
                                     </div>
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-5">
                                     <div className="form-group">
                                         <span className="form-label">Combo đã chọn: </span>
                                         <input className='form-control' value={selectedCombo}
@@ -1007,15 +980,15 @@ export default function CreateContract() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-md-6">
+                            <div className="row space-around">
+                                <div className="col-md-5">
                                     <div className="form-group">
                                         <span className="form-label">Ngày thuê: </span>
                                         <input value={selectContract.startDate} className="form-control" type="date"
                                             readOnly />
                                     </div>
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-5">
                                     <div className="form-group">
                                         <span className="form-label">Ngày trả: </span>
                                         <input value={selectContract.endDate} className="form-control" type="date"
@@ -1023,10 +996,10 @@ export default function CreateContract() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-md-6">
+                            <div className="row space-around">
+                                <div className="col-md-5">
                                     <div className="form-group">
-                                        <span className="form-label">Mã váy ngày 1: </span>
+                                        <span className="form-label">Váy ngày 1: </span>
                                         <input className="form-control"
                                             value={selectContract.dress.nameDress}
                                             required
@@ -1036,9 +1009,9 @@ export default function CreateContract() {
                                         <span className="select-arrow" />
                                     </div>
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-5">
                                     <div className="form-group">
-                                        <span className="form-label">Mã Vest ngày 1</span>
+                                        <span className="form-label">Vest ngày 1</span>
                                         <input className="form-control"
                                             value={selectContract.vest.nameVest}
                                             required>
@@ -1048,10 +1021,10 @@ export default function CreateContract() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-md-6">
+                            <div className="row space-around">
+                                <div className="col-md-5">
                                     <div className="form-group">
-                                        <span className="form-label">Mã váy ngày 2: </span>
+                                        <span className="form-label">Váy ngày 2: </span>
                                         <input className="form-control"
                                             value={selectContract.dress1.nameDress}
                                             required
@@ -1061,9 +1034,9 @@ export default function CreateContract() {
                                         <span className="select-arrow" />
                                     </div>
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-5">
                                     <div className="form-group">
-                                        <span className="form-label">Mã Vest ngày 2</span>
+                                        <span className="form-label">Vest ngày 2</span>
                                         <input className="form-control"
                                             value={selectContract.vest1.nameVest}
                                             required>
@@ -1073,20 +1046,22 @@ export default function CreateContract() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-md-6">
+                            <div className="row space-around">
+                                <div className="col-md-5">
                                     <div className="form-group">
                                         <span className="form-label">Tiền cọc:  </span>
                                         <input className="form-control"
                                             id='input-deposit'
                                             required
+                                            value={depositMoney}
+                                            onChange={(e) => setDepositMoney(e.target.value)}
                                         >
 
                                         </input>
                                         <span className="select-arrow" />
                                     </div>
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-5">
                                     <div className="form-group">
                                         <span className="form-label">Tổng tiền:  </span>
                                         <p className="form-control">

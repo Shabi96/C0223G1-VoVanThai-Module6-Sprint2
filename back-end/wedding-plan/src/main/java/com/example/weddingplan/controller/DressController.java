@@ -47,18 +47,7 @@ public class DressController {
         } catch (NumberFormatException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        List<Dress> dressList = dressService.getDressByDateMaintenanceIsNotNullAndFlagDeleteIsFalseAndItemStatus_IdStatus(3L);
-        LocalDate localDate = LocalDate.now();
-        for (Dress d: dressList) {
-            if (d.getDateMaintenance() != null) {
-                LocalDate dateMaintenance = LocalDate.parse(d.getDateMaintenance());
-                if (dateMaintenance.plusDays(4).isEqual(localDate)) {
-                    d.setItemStatus(statusService.getById(1L));
-                    d.setDateMaintenance(null);
-                    dressService.addNewDress(d);
-                }
-            }
-        }
+
         Page<Dress> dressPage = dressService.getAllByFlagDeleteIsFalseAndNameDressAndTypeDress_NameTypeDressAndItemStatus_NameStatus(pageable, nameDress, nameTypeDress, nameStatus);
         if (dressPage.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -66,6 +55,7 @@ public class DressController {
         return new ResponseEntity<>(dressPage, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<?> getDressByNameDress(@PathVariable Long id) {
         if (dressService.getDressByFlagDeleteIsFalseAndIdDress(id) != null) {
@@ -74,16 +64,7 @@ public class DressController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//    @GetMapping("/date/{date}/{typeDress}")
-//    public ResponseEntity<?> getDress(@PathVariable String date, @PathVariable String typeDress) {
-//        LocalDate targetDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
-//        if (dressService.getAllByNameTypeDress(typeDress).size() == 0) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//        List<Dress> findListDress = new ArrayList<>();
-//        return new ResponseEntity<>(findListDress, HttpStatus.OK);
-//    }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/rented/{name}/{date}")
     public ResponseEntity<?> getListDressRented(@PathVariable String name, @PathVariable String date) {
         List<Dress> dressReadyList = dressService.getDressReady(name, 1L);
@@ -108,6 +89,16 @@ public class DressController {
             } else {
                 resultDressList.add(dress);
             }
+        }
+//        List<Dress> maintenanceDresses = dressService.getDressByDateMaintenanceIsNotNullAndFlagDeleteIsFalseAndItemStatus_IdStatus(3L);
+//        for (Dress d: maintenanceDresses) {
+//            LocalDate maintenanceDate = LocalDate.parse(d.getDateMaintenance(), DateTimeFormatter.ISO_DATE);
+//            if (targetDate.isAfter(maintenanceDate.plusDays(4))) {
+//                resultDressList.add(d);
+//            }
+//        }
+        if (resultDressList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(resultDressList, HttpStatus.OK);
     }

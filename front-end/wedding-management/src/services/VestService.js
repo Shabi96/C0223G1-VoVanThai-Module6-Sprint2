@@ -5,12 +5,12 @@ export async function getAllVest(page, nameVest, nameStatus, headers) {
     return res.data;
 }
 
-export async function getVestByDate(date) {
-    const res = await axios.get("http://localhost:8080/vest/rented/" + date);
+export async function getVestByDate(date, headers) {
+    const res = await axios.get("http://localhost:8080/vest/rented/" + date, {headers});
     return res.data;
 }
 
-export async function getVestById(id) {
-    const res = await axios.get("http://localhost:8080/vest/" + id);
+export async function getVestById(id, headers) {
+    const res = await axios.get("http://localhost:8080/vest/" + id, {headers});
     return res.data;
 }

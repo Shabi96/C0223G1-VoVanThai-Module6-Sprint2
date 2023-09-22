@@ -8,12 +8,23 @@ export default function Payment() {
     const [contract, setContract] = useState(null);
     const navigate = useNavigate();
 
+    const headers = {
+        "Authorization": 'Bearer ' + localStorage.getItem('token')
+    }
+
+    console.log(headers);
     const getURL = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const responseCode = urlParams.get('vnp_ResponseCode');
         console.log(responseCode);
         setResponseCode(responseCode)
     }
+    useEffect(() => {
+        let tokenLogin = localStorage.getItem("token");
+        if (tokenLogin == null) {
+            navigate('/404')
+        }
+    }, [])
 
     const paymentSuccess = async () => {
         if (responseCode == '00') {
@@ -21,7 +32,7 @@ export default function Payment() {
             console.log(JSON.parse(data));
             setContract(JSON.parse(data));
             localStorage.removeItem("createContract");
-            await createNewContract(JSON.parse(data)).then(() => {
+            await createNewContract(JSON.parse(data), headers).then(() => {
                 Swal.fire({
                     icon: 'success',
                     title: 'Thanh toán thành công!!!!',

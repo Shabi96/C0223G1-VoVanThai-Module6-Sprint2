@@ -26,6 +26,7 @@
   font-weight: bold;
   color: #BA7E7E;
   letter-spacing: 1px;
+  margin: 10px;
 }
 
 .modal_inner_details h1 {
@@ -42,6 +43,7 @@
 .modal_inner_details img {
   width: 270px;
   min-height: 400px;
+  max-height: 400px;
   margin-top: 10px;
 }
 

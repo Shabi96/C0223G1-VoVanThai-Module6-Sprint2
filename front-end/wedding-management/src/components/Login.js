@@ -12,7 +12,7 @@ export default function Login() {
         if (user == '') {
             return;
         } else {
-            navigate("/create-contract");
+            navigate("/contract");
         }
     }
 

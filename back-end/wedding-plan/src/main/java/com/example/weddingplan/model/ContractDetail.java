@@ -18,6 +18,8 @@ public class ContractDetail {
     @OneToOne
     @JoinColumn(name = "id_contract")
     private Contract contract;
+    private String weddingDate;
+
 
     public ContractDetail() {
     }
@@ -27,6 +29,14 @@ public class ContractDetail {
         this.dress = dress;
         this.vest = vest;
         this.contract = contract;
+    }
+
+    public ContractDetail(Long idContractDetail, Dress dress, Vest vest, Contract contract, String weddingDate) {
+        this.idContractDetail = idContractDetail;
+        this.dress = dress;
+        this.vest = vest;
+        this.contract = contract;
+        this.weddingDate = weddingDate;
     }
 
     public void setIdContractDetail(Long id) {
@@ -59,5 +69,13 @@ public class ContractDetail {
 
     public void setContract(Contract contract) {
         this.contract = contract;
+    }
+
+    public String getWeddingDate() {
+        return weddingDate;
+    }
+
+    public void setWeddingDate(String weddingDate) {
+        this.weddingDate = weddingDate;
     }
 }

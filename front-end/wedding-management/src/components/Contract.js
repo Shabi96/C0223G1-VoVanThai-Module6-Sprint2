@@ -21,6 +21,12 @@ export default function Contract() {
     const [inputDe, setInputDe] = useState(0);
     let [phone, setPhone] = useState('');
 
+    useEffect(() => {
+        let tokenLogin = localStorage.getItem("token");
+        if (tokenLogin == null) {
+            navigate('/404')
+        }
+    }, [])
 
     const openModalPayment = () => {
         setIsOpenPayment(true);
@@ -44,7 +50,6 @@ export default function Contract() {
     };
 
     const openModalEnd = async () => {
-        console.log("vào được rồi này!!!!");
         closeModal();
         setIsOpenEnd(true);
     };
@@ -55,16 +60,6 @@ export default function Contract() {
 
     const getListContractsByStatus = async (page, nameCustomer, phone, status) => {
         try {
-            // fetch(`http://localhost:8080/contracts?page=${page}&&nameCustomer=${nameCustomer}&&status=${status}`, { headers })
-            // .then((response) => {
-            //     console.log(response.status);
-            //     console.log(response.json());
-            //     // if (response.status === 401) {
-            //     //     setContracts([]);
-            //     // } else if (response.status === 200) {
-            //     //     setContracts(response.data)
-            //     // } else if (response.)
-            // })
             const data = await getAllContract(page, nameCustomer, phone, status, headers);
             setContracts(data);
         } catch (error) {
@@ -76,14 +71,18 @@ export default function Contract() {
 
 
     const getContractDetails = async (id) => {
-        console.log("đã vào");
         try {
-            const data = await getContractDetailsByContractId(id);
-            setContract(await getContractById(id));
+            const data = await getContractDetailsByContractId(id, headers);
+            setContract(await getContractById(id, headers));
             setContractDetails(data);
             openModal();
         } catch (error) {
-            console.log("Lỗi luônnnn");
+            Swal.fire({
+                icon: 'error',
+                title: 'Có lỗi xảy ra!!!!',
+                showConfirmButton: false,
+                timer: 1500
+            })
         }
     }
 
@@ -141,6 +140,7 @@ export default function Contract() {
     }
 
     const handlePayment = async () => {
+        console.log(headers);
         Swal.fire({
             icon: 'question',
             title: 'Xác nhận thanh toán hợp đồng????',
@@ -154,7 +154,7 @@ export default function Contract() {
                     || (contractDetails.length == 2 && contractDetails[0].dress.maintenanceTimes < 50 && contractDetails[0].dress.maintenanceTimes < 50
                         && contractDetails[1].dress.maintenanceTimes < 50 && contractDetails[1].dress.maintenanceTimes < 50)) {
                     try {
-                        await endContract(contract.idContract, inputDe).then(async () => {
+                        await endContract(contract.idContract, inputDe, headers).then(async () => {
                             Swal.fire(({
                                 icon: 'success',
                                 title: 'Thanh toán thành công!!!!',
@@ -202,7 +202,7 @@ export default function Contract() {
                     }).then(async (r) => {
                         if (r.isConfirmed) {
                             try {
-                                await endContract(contract.idContract, inputDe).then(async () => {
+                                await endContract(contract.idContract, inputDe, headers).then(async () => {
                                     Swal.fire(({
                                         icon: 'success',
                                         title: 'Thanh toán thành công!!!!',
@@ -236,7 +236,7 @@ export default function Contract() {
                     }).then(async (re) => {
                         if (re.isConfirmed) {
                             try {
-                                await endContract(contract.idContract, inputDe).then(async () => {
+                                await endContract(contract.idContract, inputDe, headers).then(async () => {
                                     Swal.fire(({
                                         icon: 'success',
                                         title: 'Thanh toán thành công!!!!',
@@ -284,7 +284,7 @@ export default function Contract() {
                     }).then(async (r) => {
                         if (r.isConfirmed) {
                             try {
-                                await endContract(contract.idContract, inputDe).then(async () => {
+                                await endContract(contract.idContract, inputDe, headers).then(async () => {
                                     Swal.fire(({
                                         icon: 'success',
                                         title: 'Thanh toán thành công!!!!',
@@ -309,7 +309,7 @@ export default function Contract() {
                 }
                 else if (contractDetails.length == 1 && contractDetails[0].dress.maintenanceTimes < 50 && contractDetails[0].vest.maintenanceTimes < 50) {
                     try {
-                        await endContract(contract.idContract, inputDe).then(async () => {
+                        await endContract(contract.idContract, inputDe, headers).then(async () => {
                             Swal.fire(({
                                 icon: 'success',
                                 title: 'Thanh toán thành công!!!!',
@@ -363,7 +363,7 @@ export default function Contract() {
                         }).then(async (r) => {
                             if (r.isConfirmed) {
                                 try {
-                                    await endContract(contract.idContract, inputDe).then(async () => {
+                                    await endContract(contract.idContract, inputDe, headers).then(async () => {
                                         Swal.fire(({
                                             icon: 'success',
                                             title: 'Thanh toán thành công!!!!',
@@ -413,7 +413,7 @@ export default function Contract() {
                         }).then(async (r) => {
                             if (r.isConfirmed) {
                                 try {
-                                    await endContract(contract.idContract, inputDe).then(async () => {
+                                    await endContract(contract.idContract, inputDe, headers).then(async () => {
                                         Swal.fire(({
                                             icon: 'success',
                                             title: 'Thanh toán thành công!!!!',
@@ -448,7 +448,7 @@ export default function Contract() {
                         }).then(async (re) => {
                             if (re.isConfirmed) {
                                 try {
-                                    await endContract(contract.idContract, inputDe).then(async () => {
+                                    await endContract(contract.idContract, inputDe, headers).then(async () => {
                                         Swal.fire(({
                                             icon: 'success',
                                             title: 'Thanh toán thành công!!!!',
@@ -484,7 +484,7 @@ export default function Contract() {
                         }).then(async (re) => {
                             if (re.isConfirmed) {
                                 try {
-                                    await endContract(contract.idContract, inputDe).then(async () => {
+                                    await endContract(contract.idContract, inputDe, headers).then(async () => {
                                         Swal.fire(({
                                             icon: 'success',
                                             title: 'Thanh toán thành công!!!!',
@@ -534,7 +534,7 @@ export default function Contract() {
                         }).then(async (r) => {
                             if (r.isConfirmed) {
                                 try {
-                                    await endContract(contract.idContract, inputDe).then(async () => {
+                                    await endContract(contract.idContract, inputDe, headers).then(async () => {
                                         Swal.fire(({
                                             icon: 'success',
                                             title: 'Thanh toán thành công!!!!',
@@ -584,7 +584,7 @@ export default function Contract() {
                         }).then(async (r) => {
                             if (r.isConfirmed) {
                                 try {
-                                    await endContract(contract.idContract, inputDe).then(async () => {
+                                    await endContract(contract.idContract, inputDe, headers).then(async () => {
                                         Swal.fire(({
                                             icon: 'success',
                                             title: 'Thanh toán thành công!!!!',
@@ -622,7 +622,7 @@ export default function Contract() {
                         }).then(async (re) => {
                             if (re.isConfirmed) {
                                 try {
-                                    await endContract(contract.idContract, inputDe).then(async () => {
+                                    await endContract(contract.idContract, inputDe, headers).then(async () => {
                                         Swal.fire(({
                                             icon: 'success',
                                             title: 'Thanh toán thành công!!!!',
@@ -659,7 +659,7 @@ export default function Contract() {
                         }).then(async (re) => {
                             if (re.isConfirmed) {
                                 try {
-                                    await endContract(contract.idContract, inputDe).then(async () => {
+                                    await endContract(contract.idContract, inputDe, headers).then(async () => {
                                         Swal.fire(({
                                             icon: 'success',
                                             title: 'Thanh toán thành công!!!!',
@@ -696,7 +696,7 @@ export default function Contract() {
                         }).then(async (re) => {
                             if (re.isConfirmed) {
                                 try {
-                                    await endContract(contract.idContract, inputDe).then(async () => {
+                                    await endContract(contract.idContract, inputDe, headers).then(async () => {
                                         Swal.fire(({
                                             icon: 'success',
                                             title: 'Thanh toán thành công!!!!',
@@ -733,7 +733,7 @@ export default function Contract() {
                         }).then(async (re) => {
                             if (re.isConfirmed) {
                                 try {
-                                    await endContract(contract.idContract, inputDe).then(async () => {
+                                    await endContract(contract.idContract, inputDe, headers).then(async () => {
                                         Swal.fire(({
                                             icon: 'success',
                                             title: 'Thanh toán thành công!!!!',
@@ -771,7 +771,7 @@ export default function Contract() {
                         }).then(async (re) => {
                             if (re.isConfirmed) {
                                 try {
-                                    await endContract(contract.idContract, inputDe).then(async () => {
+                                    await endContract(contract.idContract, inputDe, headers).then(async () => {
                                         Swal.fire(({
                                             icon: 'success',
                                             title: 'Thanh toán thành công!!!!',
@@ -836,7 +836,7 @@ export default function Contract() {
                         }).then(async (re) => {
                             if (re.isConfirmed) {
                                 try {
-                                    await endContract(contract.idContract, inputDe).then(async () => {
+                                    await endContract(contract.idContract, inputDe, headers).then(async () => {
                                         Swal.fire(({
                                             icon: 'success',
                                             title: 'Thanh toán thành công!!!!',
@@ -888,7 +888,7 @@ export default function Contract() {
                         }).then(async (re) => {
                             if (re.isConfirmed) {
                                 try {
-                                    await endContract(contract.idContract, inputDe).then(async () => {
+                                    await endContract(contract.idContract, inputDe, headers).then(async () => {
                                         Swal.fire(({
                                             icon: 'success',
                                             title: 'Thanh toán thành công!!!!',
@@ -940,7 +940,7 @@ export default function Contract() {
                         }).then(async (re) => {
                             if (re.isConfirmed) {
                                 try {
-                                    await endContract(contract.idContract, inputDe).then(async () => {
+                                    await endContract(contract.idContract, inputDe, headers).then(async () => {
                                         Swal.fire(({
                                             icon: 'success',
                                             title: 'Thanh toán thành công!!!!',
@@ -976,7 +976,7 @@ export default function Contract() {
                         }).then(async (re) => {
                             if (re.isConfirmed) {
                                 try {
-                                    await endContract(contract.idContract, inputDe).then(async () => {
+                                    await endContract(contract.idContract, inputDe, headers).then(async () => {
                                         Swal.fire(({
                                             icon: 'success',
                                             title: 'Thanh toán thành công!!!!',
@@ -1026,7 +1026,7 @@ export default function Contract() {
                         }).then(async (re) => {
                             if (re.isConfirmed) {
                                 try {
-                                    await endContract(contract.idContract, inputDe).then(async () => {
+                                    await endContract(contract.idContract, inputDe, headers).then(async () => {
                                         Swal.fire(({
                                             icon: 'success',
                                             title: 'Thanh toán thành công!!!!',
@@ -1062,44 +1062,55 @@ export default function Contract() {
     }
 
     const handleCancelContract = async (id) => {
-        const data = await getContractDetailsByContractId(id);
-        Swal.fire({
-            icon: 'question',
-            title: 'Xác nhận hủy hợp đồng khách hàng:  ' + data[0].contract.customer.nameCustomer,
-            text: 'Lưu ý: Tiền cọc sẽ không được trả lại!!!!',
-            showConfirmButton: true,
-            showCancelButton: true,
-            confirmButtonText: 'Có',
-            cancelButtonText: 'Không'
-        }).then(async (res) => {
-            if (res.isConfirmed) {
-                try {
-                    await cancelContract(id).then(() => {
+        const data = await getContractDetailsByContractId(id, headers);
+        const currentDate = moment();
+        const formattedDate = currentDate.format('YYYY-MM-DD');
+        if ((data[0].contract.startDate) >= formattedDate) {
+            Swal.fire({
+                icon: 'question',
+                title: 'Xác nhận hủy hợp đồng khách hàng:  ' + data[0].contract.customer.nameCustomer,
+                text: 'Lưu ý: Tiền cọc sẽ không được trả lại!!!!',
+                showConfirmButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'Có',
+                cancelButtonText: 'Không'
+            }).then(async (res) => {
+                if (res.isConfirmed) {
+                    try {
+                        await cancelContract(id, headers).then(() => {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Hủy hợp đồng thành công!!!!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                        })
+                        navigate("/contract");
+                    } catch (error) {
                         Swal.fire({
-                            icon: 'success',
-                            title: 'Hủy hợp đồng thành công!!!!',
+                            icon: 'error',
+                            title: 'Hủy hợp đồng không thành công!!!!',
                             showConfirmButton: false,
                             timer: 1500
                         })
-                    })
-                } catch (error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Hủy hợp đồng không thành công!!!!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
+                    }
 
-            }
-        })
+                }
+            })
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Đã quá thời gian, không thể hủy!!!!',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        }
     }
     const location = useLocation();
     useEffect(() => {
         document.title = 'Hợp Đồng'
     }, [])
 
-    console.log(contracts);
     useEffect(() => {
         getListContractsByStatus(page, nameCustomer, phone, status)
     }, [location]);
@@ -1311,7 +1322,7 @@ export default function Contract() {
                                 <table className="table align-items-center mb-0">
                                     <thead>
                                         <tr style={{ color: '#866ec7' }}>
-                                            <th className="text-secondary opacity-7" />
+                                            <th className="text-uppercase text-center text-xxs font-weight-bolder opacity-7">Ngày cưới</th>
                                             <th className="text-uppercase text-center text-xxs font-weight-bolder opacity-7">Váy</th>
                                             <th className="text-uppercase text-center text-xxs font-weight-bolder opacity-7 ps-2">Vest</th>
                                             <th className="text-center text-uppercase text-xxs font-weight-bolder opacity-7">Dịch vụ đi kèm</th>
@@ -1324,7 +1335,7 @@ export default function Contract() {
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    <p className="text-xs text-center font-weight-bold mb-0"></p>
+                                                    <p className="text-xs text-center font-weight-bold mb-0">{moment(contractDetails[0].weddingDate).format('DD/MM/YYYY')}</p>
                                                 </td>
                                                 <td className="align-middle text-center">
                                                     <span className="text-secondary text-xs font-weight-bold">
@@ -1354,7 +1365,7 @@ export default function Contract() {
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    <p className="text-xs text-center font-weight-bold mb-0">Ngày 1</p>
+                                                    <p className="text-xs text-center font-weight-bold mb-0">{moment(contractDetails[0].weddingDate).format('DD/MM/YYYY')}</p>
                                                     {/* <p className="text-xs text-center font-weight-bold mb-0">{contractDetails[0].contract.startDate}</p> */}
                                                 </td>
                                                 <td className="align-middle text-center">
@@ -1383,7 +1394,7 @@ export default function Contract() {
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <p className="text-xs text-center font-weight-bold mb-0">Ngày 2</p>
+                                                    <p className="text-xs text-center font-weight-bold mb-0">{moment(contractDetails[1].weddingDate).format('DD/MM/YYYY')}</p>
                                                 </td>
                                                 <td className="align-middle text-center">
                                                     <span className="text-secondary text-xs font-weight-bold">

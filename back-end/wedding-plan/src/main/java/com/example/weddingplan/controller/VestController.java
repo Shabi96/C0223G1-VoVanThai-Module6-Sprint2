@@ -18,10 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 @RestController
 @CrossOrigin("*")
@@ -37,6 +35,7 @@ public class VestController {
     @Autowired
     private IContractDetailService contractDetailService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<?> getVestById(@PathVariable Long id) {
         if (vestService.getVestByFlagDeleteIsFalseAndIdVest(id) != null) {
@@ -60,25 +59,13 @@ public class VestController {
         } catch (NumberFormatException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        List<Vest> vestList = vestService.getVestByDateMaintenanceIsNotNullAndFlagDeleteIsFalseAndItemStatus_IdStatus(3L);
-        LocalDate localDate = LocalDate.now();
-        for (Vest v : vestList) {
-            if (v.getDateMaintenance() != null) {
-                LocalDate dateMaintenance = LocalDate.parse(v.getDateMaintenance());
-                if (dateMaintenance.plusDays(4).isEqual(localDate)) {
-                    v.setItemStatus(statusService.getById(1L));
-                    v.setDateMaintenance(null);
-                    vestService.addNewVest(v);
-                }
-            }
-        }
         Page<Vest> vestPage = vestService.getVestByFlagDeleteIsFalseAndNameVest(pageable, nameVest, nameStatus);
         if (!vestPage.isEmpty()) {
             return new ResponseEntity<>(vestPage, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/rented/{date}")
     public ResponseEntity<?> getListDressRented(@PathVariable String date) {
         List<Vest> readyListVest = vestService.getAllByItemStatus_IdStatus(1L);
@@ -103,6 +90,16 @@ public class VestController {
             } else {
                 resultVestList.add(v);
             }
+        }
+//        List<Vest> maintenanceVests = vestService.getVestByDateMaintenanceIsNotNullAndFlagDeleteIsFalseAndItemStatus_IdStatus(3L);
+//        for (Vest v: maintenanceVests) {
+//            LocalDate maintenanceDate = LocalDate.parse(v.getDateMaintenance(), DateTimeFormatter.ISO_DATE);
+//            if (targetDate.isAfter(maintenanceDate.plusDays(4))) {
+//                resultVestList.add(v);
+//            }
+//        }
+        if(resultVestList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(resultVestList, HttpStatus.OK);
     }

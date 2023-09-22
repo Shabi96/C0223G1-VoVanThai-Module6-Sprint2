@@ -4,6 +4,7 @@ import { getAllVest, getVestById } from "../services/VestService";
 import { getAllStatus } from "../services/DressService";
 import Swal from "sweetalert2";
 import { getContractDetailsByIdVest } from "../services/ContractDetailService";
+import { useNavigate } from "react-router-dom";
 
 
 export default function Vest() {
@@ -15,6 +16,7 @@ export default function Vest() {
     const [isOpen, setIsOpen] = useState(true);
     const [vest, setVest] = useState(null);
     const [listVestRented, setListVestRented] = useState([]);
+    const navigate = useNavigate();
 
     const headers = {
         'Authorization': `Bearer ${localStorage.getItem("token")}`
@@ -31,10 +33,10 @@ export default function Vest() {
 
     const handleGetVest = async (id) => {
         try {
-            const data = await getVestById(id);
+            const data = await getVestById(id, headers);
             if (data.itemStatus.idStatus == 2) {
                 try {
-                    setListVestRented(await getContractDetailsByIdVest(id));
+                    setListVestRented(await getContractDetailsByIdVest(id, headers));
                 } catch (error) {
                     console.log("Không có ngày thuê");
                 }
@@ -74,7 +76,7 @@ export default function Vest() {
 
     const getStatus = async () => {
         try {
-            const data = await getAllStatus();
+            const data = await getAllStatus(headers);
             setStatusList(data);
         } catch (error) {
             console.log("Không có dữ liệu");
@@ -105,9 +107,14 @@ export default function Vest() {
             handleSearch()
         }
     }
-
+    useEffect(() => {
+        let tokenLogin = localStorage.getItem("token");
+        if (tokenLogin == null) {
+            navigate('/404')
+        }
+    }, [])
     const nextPage = async () => {
-    
+
         page += 1;
 
         if (page < vests.totalPages) {
@@ -124,6 +131,9 @@ export default function Vest() {
         await setPageFunction(page).then(setVests(await getAllVest(page, nameVest, nameStatus, headers)));
     }
 
+    useEffect(() => {
+        document.title = "VEST";
+    }, [])
 
     console.log(vests);
     useEffect(() => {
@@ -171,7 +181,7 @@ export default function Vest() {
                                             <th className="text-uppercase text-center text-xxs font-weight-bolder opacity-7 ps-2">Tên Vest</th>
                                             <th className="text-center text-uppercase text-xxs font-weight-bolder opacity-7">Trạng thái</th>
                                             <th className="text-center text-uppercase text-xxs font-weight-bolder opacity-7">Hành động</th>
-                                            <th className="text-secondary opacity-7" />
+                                            {/* <th className="text-secondary opacity-7" /> */}
                                         </tr>
 
                                     </thead>
@@ -209,19 +219,19 @@ export default function Vest() {
                                                                 <i class="fa-solid fa-circle-info" style={{ fontSize: '20px', color: '#866ec7' }}></i>
                                                             </a>
                                                         </td>
-                                                        <td className="align-middle text-center">
+                                                        {/* <td className="align-middle text-center">
                                                             <a href="javascript:;" onClick={() => { }} className="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
                                                                 <i class="fa-solid fa-pen-to-square" style={{ fontSize: '20px', color: '#866ec7' }}></i>
                                                             </a>
-                                                        </td>
+                                                        </td> */}
                                                     </tr>
                                                 )
                                             })}
                                         </tbody>
                                         :
-                                        <tbody>
-                                            <div><h1>Không có dữ liệu</h1></div>
-                                        </tbody>}
+
+                                        <div><h1>Không có dữ liệu</h1></div>
+                                    }
                                 </table>
                             </div>
                         </div>
@@ -302,7 +312,7 @@ export default function Vest() {
                                     </div>
                                     <div className="product">
                                         <p>VEST</p>
-                                        <p>{vest.information}</p>
+                                        <p className="infoText" title={vest.information}>{vest.information}</p>
                                         <p>Trạng thái: {vest.itemStatus.nameStatus}</p>
                                         {
                                             listVestRented.length != 0 &&
@@ -315,7 +325,7 @@ export default function Vest() {
                                                 )
                                             })
                                         }
-                                        <p>Số lần bảo trì: {vest.maintenanceTimes} </p>
+                                        <p>Số lần vệ sinh: {vest.maintenanceTimes} </p>
                                         <div className="buttons" >
                                             <button className="add" onClick={() => closeModal()}>Trở về</button>
                                             <button className="like"><span>♥</span></button>
