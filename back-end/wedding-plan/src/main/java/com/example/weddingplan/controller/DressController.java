@@ -90,13 +90,6 @@ public class DressController {
                 resultDressList.add(dress);
             }
         }
-//        List<Dress> maintenanceDresses = dressService.getDressByDateMaintenanceIsNotNullAndFlagDeleteIsFalseAndItemStatus_IdStatus(3L);
-//        for (Dress d: maintenanceDresses) {
-//            LocalDate maintenanceDate = LocalDate.parse(d.getDateMaintenance(), DateTimeFormatter.ISO_DATE);
-//            if (targetDate.isAfter(maintenanceDate.plusDays(4))) {
-//                resultDressList.add(d);
-//            }
-//        }
         if (resultDressList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
