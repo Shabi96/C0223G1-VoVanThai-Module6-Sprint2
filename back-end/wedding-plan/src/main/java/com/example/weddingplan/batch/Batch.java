@@ -46,4 +46,8 @@ public class Batch {
             }
         }
     }
+    @Scheduled(cron = "0 0 0 * * *")
+    private void checkReturnDate() {
+
+    }
 }

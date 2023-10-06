@@ -181,7 +181,7 @@ export default function CreateContract() {
         } catch (error) {
             Swal.fire({
                 icon: "error",
-                title: "Không có sản phẩm nào!!!!",
+                title: "Chưa chọn ngày thuê!!!!",
                 showConfirmButton: false,
                 timer: 1500
             })
@@ -539,7 +539,7 @@ export default function CreateContract() {
 
                                             {(selectedCombo == 1 && combo.length > 0) ?
                                                 <>
-                                                    <h6 style={{ color: '#866ec7', fontWeight: 'bold' }}>Combo {combo[0].nameCombo}:
+                                                    <h6 style={{ color: '#866ec7', fontWeight: 'bold' }}>Combo {combo[0].nameCombo}: &nbsp;
                                                         {typeDress == 'STANDARD' ?
                                                             <>
                                                                 {<CurrencyFormat value={combo[0].priceCombo} />} VNĐ
@@ -643,7 +643,7 @@ export default function CreateContract() {
                                                     </div>
                                                 </> : selectedCombo == 2 ?
                                                     <>
-                                                        <h6 style={{ color: '#866ec7', fontWeight: 'bold' }}>Combo {combo[1].nameCombo}:
+                                                        <h6 style={{ color: '#866ec7', fontWeight: 'bold' }}>Combo {combo[1].nameCombo}: &nbsp;
                                                             {typeDress == 'STANDARD' ?
                                                                 <>
                                                                     {<CurrencyFormat value={combo[1].priceCombo} />} VNĐ

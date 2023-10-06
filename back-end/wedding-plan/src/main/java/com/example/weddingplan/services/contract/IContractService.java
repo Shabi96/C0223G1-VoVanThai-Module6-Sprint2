@@ -11,5 +11,5 @@ public interface IContractService {
     Page<Contract> getAll(Pageable pageable, String nameCustomer);
     Page<Contract> getContractByCustomer_NameCustomerContainingAndCustomer_PhoneContainingAndStatusContractOrderByContractDateDesc(Pageable pageable, String nameCustomer, String phone,Boolean statusContract);
     Page<Contract> getAllByCustomer_NameCustomerContainingAndCustomer_PhoneContainingOrderByContractDateDesc(Pageable pageable, String nameCustomer, String phone);
-
+    Page<Contract> getContractByCustomer_NameCustomerContainingAndCustomer_PhoneContainingAndCancelContractIsTrueOrderByContractDateDesc(Pageable pageable, String nameCustomer, String phone);
 }

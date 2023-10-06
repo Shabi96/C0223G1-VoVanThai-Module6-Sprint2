@@ -35,11 +35,16 @@ public class ContractService implements IContractService {
 
     @Override
     public Page<Contract> getContractByCustomer_NameCustomerContainingAndCustomer_PhoneContainingAndStatusContractOrderByContractDateDesc(Pageable pageable, String nameCustomer, String phone, Boolean statusContract) {
-        return contractRepository.getContractByCustomer_NameCustomerContainingAndCustomer_PhoneContainingAndStatusContractOrderByContractDateDesc(pageable, nameCustomer, phone, statusContract);
+        return contractRepository.getContractByCustomer_NameCustomerContainingAndCustomer_PhoneContainingAndStatusContractAndCancelContractIsFalseOrderByContractDateDesc(pageable, nameCustomer, phone, statusContract);
     }
 
     @Override
     public Page<Contract> getAllByCustomer_NameCustomerContainingAndCustomer_PhoneContainingOrderByContractDateDesc(Pageable pageable, String nameCustomer, String phone) {
         return contractRepository.getAllByCustomer_NameCustomerContainingAndCustomer_PhoneContainingOrderByContractDateDesc(pageable, nameCustomer, phone);
+    }
+
+    @Override
+    public Page<Contract> getContractByCustomer_NameCustomerContainingAndCustomer_PhoneContainingAndCancelContractIsTrueOrderByContractDateDesc(Pageable pageable, String nameCustomer, String phone) {
+        return contractRepository.getContractByCustomer_NameCustomerContainingAndCustomer_PhoneContainingAndCancelContractIsTrueOrderByContractDateDesc(pageable, nameCustomer, phone);
     }
 }

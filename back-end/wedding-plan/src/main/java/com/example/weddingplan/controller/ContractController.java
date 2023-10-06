@@ -73,7 +73,12 @@ public class ContractController {
                 if (contractService.getContractByCustomer_NameCustomerContainingAndCustomer_PhoneContainingAndStatusContractOrderByContractDateDesc(pageable, nameCustomer, phone, true).isEmpty()) {
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }
-                return new ResponseEntity<>(contractService.getContractByCustomer_NameCustomerContainingAndCustomer_PhoneContainingAndStatusContractOrderByContractDateDesc(pageable, nameCustomer, phone ,true), HttpStatus.OK);
+                return new ResponseEntity<>(contractService.getContractByCustomer_NameCustomerContainingAndCustomer_PhoneContainingAndStatusContractOrderByContractDateDesc(pageable, nameCustomer, phone, true), HttpStatus.OK);
+            case "3":
+                if (contractService.getContractByCustomer_NameCustomerContainingAndCustomer_PhoneContainingAndCancelContractIsTrueOrderByContractDateDesc(pageable, nameCustomer, phone).isEmpty()) {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+                return new ResponseEntity<>(contractService.getContractByCustomer_NameCustomerContainingAndCustomer_PhoneContainingAndCancelContractIsTrueOrderByContractDateDesc(pageable, nameCustomer, phone), HttpStatus.OK);
             default:
                 if (contractService.getAllByCustomer_NameCustomerContainingAndCustomer_PhoneContainingOrderByContractDateDesc(pageable, nameCustomer, phone).isEmpty()) {
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -94,7 +99,7 @@ public class ContractController {
         if (LocalDate.parse(contract.getStartDate()).isAfter(localDate) || LocalDate.parse(contract.getStartDate()).isEqual(localDate)) {
             contract.setCancelContract(true);
             List<ContractDetail> contractDetailList = contractDetailService.getContractDetailByContract_IdContract(contract.getIdContract());
-            for (ContractDetail c: contractDetailList) {
+            for (ContractDetail c : contractDetailList) {
                 if (contractDetailService.getContractDetailByDress_IdDressAndContract_CancelContractIsFalseAndContract_StatusContractIsFalse(c.getDress().getIdDress()).size() == 1) {
                     c.getDress().setItemStatus(statusService.getById(1L));
                 }
@@ -129,6 +134,7 @@ public class ContractController {
         }
         return new ResponseEntity<>(contractDetailList, HttpStatus.OK);
     }
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<?> getContractById(@PathVariable Long id) {
@@ -158,7 +164,7 @@ public class ContractController {
             Contract contract = contractService.getContractsById(id);
             if (remainMoney == (contract.getTotalPrice() - contract.getDeposit())) {
                 for (ContractDetail dt : contractDetailService.getContractDetailByContract_IdContract(id)) {
-                    if(contractDetailService.getContractDetailByDress_IdDressAndContract_CancelContractIsFalseAndContract_StatusContractIsFalse(dt.getDress().getIdDress()).size() == 1) {
+                    if (contractDetailService.getContractDetailByDress_IdDressAndContract_CancelContractIsFalseAndContract_StatusContractIsFalse(dt.getDress().getIdDress()).size() == 1) {
                         dt.getDress().setItemStatus(statusService.getById(3L));
                     }
                     if (contractDetailService.getContractDetailByVest_IdVestAndContract_CancelContractIsFalseAndContract_StatusContractIsFalse(dt.getVest().getIdVest()).size() == 1) {

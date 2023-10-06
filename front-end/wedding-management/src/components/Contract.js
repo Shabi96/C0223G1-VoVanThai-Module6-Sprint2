@@ -1137,6 +1137,7 @@ export default function Contract() {
                                         <option value={''}>Trạng thái</option>
                                         <option value={1}>Đang tiến hành</option>
                                         <option value={2}>Đã xong</option>
+                                        <option value={3}>Đã hủy</option>
                                     </select>
                                 }
                                 <button type="button" onClick={() => handleSearch()}><i class="fa-solid fa-magnifying-glass"></i></button>
