@@ -1,4 +1,4 @@
-package com.example.weddingplan.services;
+package com.example.weddingplan.services.jwt;
 
 import java.util.ArrayList;
 import java.util.Collections;

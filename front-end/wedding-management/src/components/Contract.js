@@ -150,6 +150,7 @@ export default function Contract() {
             cancelButtonText: 'Không'
         }).then(async (res) => {
             if (res.isConfirmed) {
+                console.log(contractDetails);
                 if ((contractDetails.length == 1 && contractDetails[0].dress.maintenanceTimes < 50 && contractDetails[0].dress.maintenanceTimes < 50)
                     || (contractDetails.length == 2 && contractDetails[0].dress.maintenanceTimes < 50 && contractDetails[0].dress.maintenanceTimes < 50
                         && contractDetails[1].dress.maintenanceTimes < 50 && contractDetails[1].dress.maintenanceTimes < 50)) {
@@ -1299,26 +1300,7 @@ export default function Contract() {
                             </div>
                         </div>
                         <div className="modal_inner_contract">
-                            {/* <div className="card-body pb-2">
-                                <div className="input-group input-group-outline">
-                                    <p style={{ color: '#866ec7', fontWeight: 'bold' }}>Mã hợp đồng: {contractDetails[0].contract.idContract} </p>
-                                    <p style={{ color: '#866ec7', fontWeight: 'bold' }}> Hợp đồng bao gồm: <br/> 
-                                                                - Hoa cưới cầm tay. <br></br>
-                                                                - Cà vạt chú rể. <br />
-                                                                - Trang điểm cô dâu.
-                                                            </p>
-                                    <p style={{ color: '#866ec7', fontWeight: 'bold' }}>Tổng tiền: <CurrencyFormat value={contractDetails[0].contract.totalPrice} /> VNĐ</p>
-                                    <p style={{ color: '#866ec7', fontWeight: 'bold' }}>Đã cọc: <CurrencyFormat value={contractDetails[0].contract.deposit} /> VNĐ</p>
-                                    <p style={{ color: '#866ec7', fontWeight: 'bold' }}>
-                                    <span className="text-secondary text-xs font-weight-bold">
-                                            <img src={contractDetails[0].dress.image} style={{ width: '100px', height: '120px' }}></img>
-                                        </span>
-                                        <span className="text-secondary text-xs font-weight-bold">
-                                            <img src={contractDetails[0].vest.image} style={{ width: '100px', height: '120px' }}></img>
-                                        </span>
-                                    </p>
-                                </div>
-                            </div> */}
+        
                             <div className="card-body pb-2">
                                 <table className="table align-items-center mb-0">
                                     <thead>

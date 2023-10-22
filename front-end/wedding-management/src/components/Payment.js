@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import CurrencyFormat from "./CurrencyFormat";
 import { useNavigate } from "react-router-dom";
 import { createNewContract } from "../services/ContractService";
+import moment from "moment";
 export default function Payment() {
     const [responseCode, setResponseCode] = useState(null);
     const [contract, setContract] = useState(null);
@@ -97,14 +98,14 @@ export default function Payment() {
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <span className="form-label">Ngày thuê: </span>
-                                    <input value={contract.startDate} className="form-control" type="date"
+                                    <input value={moment(contract.startDate).format('DD/MM/YYYY')} className="form-control" type="date"
                                         readOnly />
                                 </div>
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <span className="form-label">Ngày trả: </span>
-                                    <input value={contract.endDate} className="form-control" type="date"
+                                    <input value={moment(contract.endDate).format('DD/MM/YYYY')} className="form-control" type="date"
                                         readOnly />
                                 </div>
                             </div>
@@ -194,15 +195,15 @@ export default function Payment() {
                                 <div className="col-md-6">
                                     <div className="form-group">
                                         <span className="form-label">Ngày thuê: </span>
-                                        <input value={contract.startDate} className="form-control" type="date"
-                                            readOnly />
+                                        <p  className="form-control" type="date"
+                                            >{moment(contract.startDate).format('DD/MM/YYYY')}</p>
                                     </div>
                                 </div>
                                 <div className="col-md-6">
                                     <div className="form-group">
                                         <span className="form-label">Ngày trả: </span>
-                                        <input value={contract.endDate} className="form-control" type="date"
-                                            readOnly />
+                                        <p  className="form-control" type="date"
+                                            >{moment(contract.endDate).format('DD/MM/YYYY')}</p>
                                     </div>
                                 </div>
                             </div>

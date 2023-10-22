@@ -12,6 +12,7 @@ import { debounce } from 'lodash';
 import { getPayment } from "../services/PaymentService";
 import CurrencyFormat from "./CurrencyFormat";
 import image1 from '../vnpay.jpg';
+import moment from "moment";
 
 
 // Kiểm tra số điện thoại khách hàng có tồn tại hay không? => ......
@@ -32,8 +33,6 @@ export default function CreateContract() {
     const [idVest, setIdVest] = useState(null);
     const [idDress2, setIdDress2] = useState(null);
     const [idVest2, setIdVest2] = useState(null);
-    const [listDress2, setListDress2] = useState([]);
-    const [listVest2, setListVests2] = useState([]);
     const [selectedDress2, setSelectedDress2] = useState(null);
     const [selectedVest2, setSelectedVest2] = useState(null);
     const [filterSelectedDress, setFilterSelectedDress] = useState([]);
@@ -85,6 +84,7 @@ export default function CreateContract() {
         }
     }, [])
 
+// lấy khách hàng theo số điện thoại
     const getUser = async () => {
         const phone = document.getElementById("find-customer").value;
         try {
@@ -109,6 +109,7 @@ export default function CreateContract() {
             })
         }
     }
+
     const handleEnter = async (e) => {
         const key = e.keyCode;
         if (key == 13) {
@@ -116,6 +117,7 @@ export default function CreateContract() {
         }
     }
 
+    // nâng hạng váy
     const getUpgraded = () => {
         console.log(selectedCombo);
         setListDress([]);
@@ -138,6 +140,7 @@ export default function CreateContract() {
         setTypeDress("STANDARD");
     }
 
+    //lấy combo
     const getCombo = async () => {
         try {
             const data = await getAllCombo(headers);
@@ -153,6 +156,7 @@ export default function CreateContract() {
 
     }
 
+    //kiểm tra và lấy ra danh sách váy + vest
     const checkRentedDate = async () => {
         setListDress([]);
         setListVests([]);
@@ -188,9 +192,12 @@ export default function CreateContract() {
         }
 
     }
+
+    // lấy token để phân quyền
     const headers = {
         "Authorization": 'Bearer ' + localStorage.getItem('token')
     }
+
 
     const handleChange = async (selectedOption) => {
         setSelectedDress(selectedOption);
@@ -215,7 +222,6 @@ export default function CreateContract() {
     }
 
     const debouncedHandleFilter = debounce(handleFilterDress, 300);
-
 
     const handleChange2 = async (selectedOption) => {
         setSelectedDress2(selectedOption);
@@ -288,7 +294,6 @@ export default function CreateContract() {
     }
 
     const handleCreateContract1 = async () => {
-        console.log("đã vào");
         const inputDate = document.getElementById("find-date").value;
         if (inputDate == '') {
             Swal.fire({
@@ -871,16 +876,16 @@ export default function CreateContract() {
                             <div className="row space-around">
                                 <div className="col-md-5">
                                     <div className="form-group">
-                                        <span className="form-label">Ngày thuê: </span>
-                                        <input value={selectContract.startDate} className="form-control" type="date"
-                                            readOnly />
+                                        <span className="form-label">Ngày thuê: </span>                                       
+                                        <p className="form-control"
+                                        > {moment(selectContract.startDate).format('DD/MM/YYYY')}</p>
                                     </div>
                                 </div>
                                 <div className="col-md-5">
                                     <div className="form-group">
                                         <span className="form-label">Ngày trả: </span>
-                                        <input value={selectContract.endDate} className="form-control" type="date"
-                                            readOnly />
+                                        <p className="form-control"
+                                        > {moment(selectContract.endDate).format('DD/MM/YYYY')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -929,10 +934,7 @@ export default function CreateContract() {
                                         <p className="form-control"
                                         >
                                             <CurrencyFormat value={selectContract.totalPrice} /> VNĐ
-
                                         </p>
-
-
                                         <span className="select-arrow" />
                                     </div>
                                 </div>
@@ -984,15 +986,15 @@ export default function CreateContract() {
                                 <div className="col-md-5">
                                     <div className="form-group">
                                         <span className="form-label">Ngày thuê: </span>
-                                        <input value={selectContract.startDate} className="form-control" type="date"
-                                            readOnly />
+                                        <p className="form-control"
+                                        > {moment(selectContract.startDate).format('DD/MM/YYYY')}</p>
                                     </div>
                                 </div>
                                 <div className="col-md-5">
                                     <div className="form-group">
                                         <span className="form-label">Ngày trả: </span>
-                                        <input value={selectContract.endDate} className="form-control" type="date"
-                                            readOnly />
+                                        <p className="form-control"
+                                        > {moment(selectContract.endDate).format('DD/MM/YYYY')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -1004,7 +1006,6 @@ export default function CreateContract() {
                                             value={selectContract.dress.nameDress}
                                             required
                                         >
-
                                         </input>
                                         <span className="select-arrow" />
                                     </div>
@@ -1015,7 +1016,6 @@ export default function CreateContract() {
                                         <input className="form-control"
                                             value={selectContract.vest.nameVest}
                                             required>
-
                                         </input>
                                         <span className="select-arrow" />
                                     </div>
@@ -1029,7 +1029,6 @@ export default function CreateContract() {
                                             value={selectContract.dress1.nameDress}
                                             required
                                         >
-
                                         </input>
                                         <span className="select-arrow" />
                                     </div>
@@ -1040,7 +1039,6 @@ export default function CreateContract() {
                                         <input className="form-control"
                                             value={selectContract.vest1.nameVest}
                                             required>
-
                                         </input>
                                         <span className="select-arrow" />
                                     </div>
@@ -1056,7 +1054,6 @@ export default function CreateContract() {
                                             value={depositMoney}
                                             onChange={(e) => setDepositMoney(e.target.value)}
                                         >
-
                                         </input>
                                         <span className="select-arrow" />
                                     </div>
@@ -1084,9 +1081,7 @@ export default function CreateContract() {
                             </div>
                         </div>
                     </div>
-
                 </div>
-
             }
         </main>
     )

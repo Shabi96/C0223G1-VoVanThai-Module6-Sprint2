@@ -172,6 +172,7 @@ public class ContractController {
                     }
                     dt.getDress().setDateMaintenance(LocalDate.now().toString());
                     Dress dress = dt.getDress();
+
                     if (dress.getMaintenanceTimes() == 50) {
                         if (dress.getTypeDress().getIdTypeDress() == 2) {
                             dt.getDress().setTypeDress(typeDressService.getById(1L));
@@ -209,7 +210,11 @@ public class ContractController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("")
     public ResponseEntity<?> addNewContract(@RequestBody ContractDTO contractDTO) {
-        if (contractDTO.getVest1() == null) {
+        LocalDate localDate = LocalDate.now();
+        LocalDate startDate = LocalDate.parse(contractDTO.getStartDate());
+        if (startDate.isBefore(localDate)) {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        } else if (contractDTO.getVest1() == null) {
             Contract contract = new Contract();
             contract.setCombo(contractDTO.getCombo());
             contract.setCustomer(contractDTO.getCustomer());

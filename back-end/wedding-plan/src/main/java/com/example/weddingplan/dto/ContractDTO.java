@@ -5,7 +5,6 @@ import com.example.weddingplan.model.*;
 public class ContractDTO {
     private String startDate;
     private String endDate;
-
     private Combo combo;
 
     private Customer customer;

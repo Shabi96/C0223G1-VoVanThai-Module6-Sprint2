@@ -21,6 +21,7 @@ export async function getContractById(id, headers) {
 }
 
 export async function endContract(id, price, headers) {
+
     await axios.patch(`http://localhost:8080/contracts/${id}/${price}`, null, { headers });
 }
 export async function cancelContract(id, headers) {

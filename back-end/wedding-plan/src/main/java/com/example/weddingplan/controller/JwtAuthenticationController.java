@@ -6,7 +6,7 @@ import com.example.weddingplan.dto.EmployeeDTO;
 import com.example.weddingplan.model.Employee;
 import com.example.weddingplan.model.jwt.JwtRequest;
 import com.example.weddingplan.model.jwt.JwtResponse;
-import com.example.weddingplan.services.JwtUserDetailsService;
+import com.example.weddingplan.services.jwt.JwtUserDetailsService;
 import com.example.weddingplan.services.employee.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -74,9 +74,4 @@ public class JwtAuthenticationController {
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/test")
-    public ResponseEntity<?> getListTest(){
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }
